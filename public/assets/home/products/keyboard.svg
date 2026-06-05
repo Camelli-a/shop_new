@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 300" role="img" aria-label="keyboard product">
+  <rect width="360" height="300" rx="22" fill="#e0f7ff"/>
+  <rect x="55" y="97" width="250" height="126" rx="24" fill="#111827"/>
+  <g fill="#fff" opacity=".86">
+    <rect x="82" y="124" width="28" height="18" rx="6"/>
+    <rect x="122" y="124" width="28" height="18" rx="6"/>
+    <rect x="162" y="124" width="28" height="18" rx="6"/>
+    <rect x="202" y="124" width="28" height="18" rx="6"/>
+    <rect x="242" y="124" width="28" height="18" rx="6"/>
+    <rect x="92" y="158" width="56" height="18" rx="6"/>
+    <rect x="162" y="158" width="88" height="18" rx="6"/>
+  </g>
+  <circle cx="276" cy="74" r="34" fill="#38bdf8" opacity=".45"/>
+</svg>

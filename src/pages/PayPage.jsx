@@ -1,4 +1,4 @@
-import React,{ useContext } from 'react';
+import { useContext } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { ServiceContext } from '../contexts/ServiceContext';
 
@@ -30,23 +30,6 @@ const PayPage = () => {
     alert('支付成功')
     navigate(`/orderDetail/${orderId}`)
   }
-/*
-{
-    id: 1,
-    userId: 1,
-    orderNo: '201801010001',
-    createTime: '2018-01-01 00:00:00',
-    payTime: '2018-01-01 00:00:00',
-    status: 0,未支付 1已支付 2发货 3确认收货
-    total: 100,
-    goods: [
-        {
-            id: 1,
-            count: 1
-        }
-    ],
-}
-*/
   return <>
     <h1>Pay Page</h1>
     <p> orderId: {orderId}</p>

@@ -1,39 +1,31 @@
-const defaultList = [
-  {
-    id: 1,
-    userId: 1,
-    orderNo: '201801010001',
-    createTime: '2018-01-01 00:00:00',
-    payTime: '2018-01-01 00:00:00',
-    status: 0, // 0,未支付 1已支付 2发货 3确认收货
-    price: 100,
-    goodId: 1,
-  }
-]
+import { ORDER_STATUS } from '../constants/orderStatus';
+import { STORAGE_KEYS } from '../constants/storageKeys';
+import { mockOrders } from '../mocks';
+
+const cloneOrders = () => mockOrders.map(item => ({ ...item }));
 
 class OrderService {
   list = [];
 
-  constructor (){
+  constructor() {
     this._loadData();
   }
 
   createOrder(userId, goodId, price) {
     const orderNo = new Date().getTime();
-    // 从list中找到最大值，生成新的id
     const maxId = this.list.reduce((max, item) => {
       return item.id > max ? item.id : max;
     }, 0);
 
     const order = {
-      id:maxId + 1,
+      id: maxId + 1,
       userId,
       goodId,
       orderNo,
       createTime: new Date().toLocaleString(),
-      status: 0,
+      status: ORDER_STATUS.unpaid,
       price,
-    }
+    };
     this.list.push(order);
     this._saveData();
     return order;
@@ -45,7 +37,7 @@ class OrderService {
       return false;
     }
 
-    order.status = 1;
+    order.status = ORDER_STATUS.paid;
     order.payTime = new Date().toLocaleString();
     this._saveData();
     return true;
@@ -54,23 +46,31 @@ class OrderService {
   getOrderById(orderId) {
     return this.list.find(item => item.id === orderId);
   }
-  
 
-  // 将数据存入到localstorage中
   _saveData() {
-    localStorage.setItem('orderList', JSON.stringify(this.list));
+    localStorage.setItem(STORAGE_KEYS.orders, JSON.stringify(this.list));
   }
 
   _loadData() {
-    const list = localStorage.getItem('orderList');
-    if (list) {
-      this.list = JSON.parse(list);
-    } else {
-      this.list = defaultList;
-      this._saveData();
+    const list = localStorage.getItem(STORAGE_KEYS.orders);
+    if (!list) {
+      this._resetToMockData();
+      return;
     }
+
+    try {
+      const parsedList = JSON.parse(list);
+      this.list = Array.isArray(parsedList) ? parsedList : cloneOrders();
+    } catch {
+      this._resetToMockData();
+    }
+  }
+
+  _resetToMockData() {
+    this.list = cloneOrders();
+    this._saveData();
   }
 }
 
-const orderService = new OrderService()
+const orderService = new OrderService();
 export default orderService;

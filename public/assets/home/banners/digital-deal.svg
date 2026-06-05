@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 270" role="img" aria-label="digital deal banner">
+  <defs>
+    <linearGradient id="bg" x1="34" y1="16" x2="785" y2="252" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ff6b00"/>
+      <stop offset=".48" stop-color="#ff2f00"/>
+      <stop offset="1" stop-color="#e60012"/>
+    </linearGradient>
+  </defs>
+  <rect width="840" height="270" rx="26" fill="url(#bg)"/>
+  <path d="M0 205c143-42 259-38 348 12s206 49 354-3 192-42 138 30v26H0z" fill="#fff" opacity=".12"/>
+  <circle cx="166" cy="218" r="88" fill="#fff" opacity=".1"/>
+  <circle cx="738" cy="40" r="88" fill="#fff" opacity=".14"/>
+  <rect x="532" y="58" width="206" height="132" rx="24" fill="#ffe9d8" transform="rotate(-4 635 124)"/>
+  <rect x="562" y="88" width="146" height="15" rx="8" fill="#ff3d00"/>
+  <rect x="562" y="120" width="118" height="15" rx="8" fill="#111827" opacity=".7"/>
+  <rect x="562" y="152" width="162" height="15" rx="8" fill="#111827" opacity=".24"/>
+  <rect x="688" y="76" width="76" height="76" rx="20" fill="#fff" opacity=".2"/>
+</svg>

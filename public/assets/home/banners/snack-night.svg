@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 270" role="img" aria-label="snack night banner">
+  <defs>
+    <linearGradient id="bg" x1="34" y1="16" x2="785" y2="252" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ff3d6e"/>
+      <stop offset=".52" stop-color="#ff4d00"/>
+      <stop offset="1" stop-color="#ffb000"/>
+    </linearGradient>
+  </defs>
+  <rect width="840" height="270" rx="26" fill="url(#bg)"/>
+  <circle cx="674" cy="132" r="118" fill="#fff" opacity=".15"/>
+  <circle cx="735" cy="92" r="78" fill="#fff" opacity=".16"/>
+  <path d="M0 212c114-28 212-20 294 24 94 50 202 44 324-16 94-46 168-51 222-14v64H0z" fill="#fff" opacity=".1"/>
+  <circle cx="178" cy="214" r="72" fill="#fff7d6" opacity=".15"/>
+  <rect x="548" y="58" width="92" height="142" rx="28" fill="#fff7d6" transform="rotate(-10 594 129)"/>
+  <rect x="656" y="74" width="98" height="110" rx="26" fill="#fff" opacity=".9" transform="rotate(8 705 129)"/>
+  <path d="M574 114h48M568 144h60" stroke="#ff4d00" stroke-width="12" stroke-linecap="round"/>
+  <circle cx="705" cy="128" r="34" fill="#ff4d00" opacity=".16"/>
+</svg>

@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 300" role="img" aria-label="pillow product">
+  <rect width="360" height="300" rx="22" fill="#eef2ff"/>
+  <path d="M92 118c0-38 34-68 88-68s88 30 88 68v64c0 38-34 68-88 68s-88-30-88-68v-64Z" fill="#8fb7ff"/>
+  <path d="M129 137c32-18 70-18 102 0" stroke="#fff" stroke-width="16" stroke-linecap="round" opacity=".7"/>
+</svg>

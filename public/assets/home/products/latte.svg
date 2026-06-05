@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 300" role="img" aria-label="latte product">
+  <rect width="360" height="300" rx="22" fill="#ffe4e6"/>
+  <rect x="116" y="78" width="128" height="166" rx="28" fill="#fb7185"/>
+  <rect x="132" y="54" width="96" height="40" rx="18" fill="#fff1f2"/>
+  <text x="137" y="166" fill="#fff" font-family="Arial, sans-serif" font-size="32" font-weight="900">LATTE</text>
+</svg>

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 300" role="img" aria-label="bag product">
+  <rect width="360" height="300" rx="22" fill="#dcfce7"/>
+  <path d="M98 111h164l-18 132H116L98 111Z" fill="#22c55e"/>
+  <path d="M137 112c0-42 86-42 86 0" fill="none" stroke="#166534" stroke-width="16" stroke-linecap="round"/>
+  <rect x="132" y="143" width="96" height="22" rx="11" fill="#fff" opacity=".7"/>
+</svg>

@@ -1,5 +1,7 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+
+import { ORDER_STATUS_LABEL } from '../constants/orderStatus';
 import { ServiceContext } from '../contexts/ServiceContext';
 
 const OrderDetailPage = () => {
@@ -23,11 +25,7 @@ const OrderDetailPage = () => {
       <p>createTime: {order.createTime}</p>
       <p>price: {order.price}</p>
       <p>goodId: {order.goodId}</p>
-      <p>status: { }</p>
-      {order.status === 0 && '未支付'}
-      {order.status === 1 && '已支付'}
-      {order.status === 2 && '发货'}
-      {order.status === 3 && '确认收货'}
+      <p>status: {ORDER_STATUS_LABEL[order.status] || '未知状态'}</p>
     </div>
   );
 }
