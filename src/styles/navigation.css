@@ -1,0 +1,89 @@
+.bottom-nav {
+  position: fixed;
+  right: 10px;
+  bottom: 10px;
+  left: 10px;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  width: min(430px, calc(100% - 20px));
+  margin: 0 auto;
+  padding: 7px 5px;
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.58));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.72),
+    0 18px 42px rgba(15, 23, 42, 0.18);
+  backdrop-filter: blur(24px) saturate(1.3);
+}
+
+.bottom-nav button {
+  appearance: none;
+  display: grid;
+  position: relative;
+  min-height: 52px;
+  place-items: center;
+  gap: 2px;
+  overflow: hidden;
+  border: 0;
+  border-radius: 16px;
+  color: #2a2f3a;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  transition: transform 160ms ease, color 160ms ease, background 160ms ease;
+}
+
+.bottom-nav button:active {
+  transform: scale(0.94);
+}
+
+.bottom-nav button::after {
+  position: absolute;
+  inset: auto 18px 6px;
+  height: 3px;
+  border-radius: 999px;
+  background: currentcolor;
+  opacity: 0;
+  transform: scaleX(0.4);
+  transition: opacity 160ms ease, transform 160ms ease;
+  content: "";
+}
+
+.bottom-nav svg {
+  font-size: 22px;
+}
+
+.bottom-nav .ant-badge {
+  line-height: 1;
+}
+
+.bottom-nav .ant-badge .ant-badge-count {
+  top: 4px;
+  right: -6px;
+  min-width: 15px;
+  height: 15px;
+  padding: 0 4px;
+  line-height: 15px;
+}
+
+.bottom-nav button.is-active {
+  color: #2a2f3a;
+  background: transparent;
+  box-shadow: none;
+  font-weight: 900;
+  transform: none;
+}
+
+.bottom-nav button.is-active svg {
+  color: var(--mall-hot);
+}
+
+.bottom-nav button.is-active::after {
+  opacity: 0;
+  transform: scaleX(0.4);
+}

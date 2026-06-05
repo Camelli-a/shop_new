@@ -6,23 +6,19 @@ import {
 } from 'react';
 import { useNavigate } from 'react-router';
 import {
-  AppstoreOutlined,
   AudioOutlined,
   CameraOutlined,
   CloseOutlined,
-  HomeOutlined,
   PlusOutlined,
   ScanOutlined,
   SearchOutlined,
-  ShoppingCartOutlined,
-  UserOutlined,
 } from '@ant-design/icons';
-import { App, Badge, Button, Carousel, Empty, Input } from 'antd';
+import { App, Button, Carousel, Empty, Input } from 'antd';
 
+import BottomNav from '../components/BottomNav';
 import { STORAGE_KEYS } from '../constants/storageKeys';
 import { ServiceContext } from '../contexts/ServiceContext';
 import {
-  bottomTabs,
   categoryList,
   bannerList,
   promoDockList,
@@ -31,13 +27,6 @@ import {
 } from '../constants/homeConfig';
 
 const formatPrice = price => Number(price || 0).toFixed(price % 1 ? 1 : 0);
-
-const bottomIconMap = {
-  home: <HomeOutlined />,
-  category: <AppstoreOutlined />,
-  cart: <ShoppingCartOutlined />,
-  profile: <UserOutlined />,
-};
 
 const enrichGood = (good, index) => {
   const fallbackCategory = categoryList[(index % 6) + 1];
@@ -109,7 +98,7 @@ const HomePage = () => {
       handleCategoryClick(key);
       return;
     }
-    message.info('该频道为淘宝式运营入口，后续可接入专题页');
+    message.info('该频道为商城运营入口，后续可接入专题页');
   };
 
   const handleAddToCart = (event, good) => {
@@ -139,17 +128,13 @@ const HomePage = () => {
     navigate(`/detail/${id}`);
   };
 
-  const openCartPreview = () => {
-    message.info('购物车模块待接入，当前已完成本地加入购物车数量联动');
-  };
-
   const activeCategoryLabel =
     categoryList.find(item => item.key === activeCategory)?.label || '推荐';
 
   return (
     <main className="mall-home">
       <section className="phone-app">
-        <header className="tao-header">
+        <header className="mall-header">
           <nav className="top-channel-bar" aria-label="顶部频道">
             {topChannels.map(channel => (
               <button
@@ -164,8 +149,8 @@ const HomePage = () => {
             ))}
           </nav>
 
-          <div className="tao-search-row">
-            <div className="tao-search-box">
+          <div className="mall-search-row">
+            <div className="mall-search-box">
               <ScanOutlined className="search-scan" />
               <Input
                 className="home-search"
@@ -336,30 +321,7 @@ const HomePage = () => {
         </section>
       </section>
 
-      <nav className="bottom-nav" aria-label="前台底部导航">
-        {bottomTabs.map(tab => (
-          <button
-            className={tab.key === 'home' ? 'is-active' : ''}
-            key={tab.key}
-            type="button"
-            onClick={() => {
-              if (tab.key === 'home') window.scrollTo({ top: 0, behavior: 'smooth' });
-              if (tab.key === 'category') handleCategoryClick('all');
-              if (tab.key === 'cart') openCartPreview();
-              if (tab.key === 'profile') navigate('/login');
-            }}
-          >
-            {tab.key === 'cart' ? (
-              <Badge count={cartCount} size="small">
-                {bottomIconMap[tab.icon]}
-              </Badge>
-            ) : (
-              bottomIconMap[tab.icon]
-            )}
-            <span>{tab.label}</span>
-          </button>
-        ))}
-      </nav>
+      <BottomNav cartCount={cartCount} />
     </main>
   );
 };

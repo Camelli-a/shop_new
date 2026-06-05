@@ -11,16 +11,16 @@ export const topChannels = [
 ];
 
 export const categoryList = [
-  { key: 'all', label: '推荐', iconSrc: asset('icons/recommend.svg'), tone: 'tao-red' },
-  { key: 'digital', label: '数码', iconSrc: asset('icons/digital.svg'), tone: 'tao-orange' },
-  { key: 'food', label: '零食', iconSrc: asset('icons/snacks.svg'), tone: 'tao-pink' },
-  { key: 'life', label: '日用', iconSrc: asset('icons/daily.svg'), tone: 'tao-gold' },
-  { key: 'study', label: '学习', iconSrc: asset('icons/study.svg'), tone: 'tao-blue' },
-  { key: 'sport', label: '运动', iconSrc: asset('icons/sport.svg'), tone: 'tao-green' },
-  { key: 'fashion', label: '穿搭', iconSrc: asset('icons/fashion.svg'), tone: 'tao-rose' },
-  { key: 'shop', label: '店铺', iconSrc: asset('icons/shop.svg'), tone: 'tao-red' },
-  { key: 'coupon', label: '领券', iconSrc: asset('icons/coupon.svg'), tone: 'tao-orange' },
-  { key: 'nearby', label: '校园', iconSrc: asset('icons/campus.svg'), tone: 'tao-green' },
+  { key: 'all', label: '推荐', iconSrc: asset('icons/recommend.svg'), tone: 'mall-red' },
+  { key: 'digital', label: '数码', iconSrc: asset('icons/digital.svg'), tone: 'mall-orange' },
+  { key: 'food', label: '零食', iconSrc: asset('icons/snacks.svg'), tone: 'mall-pink' },
+  { key: 'life', label: '日用', iconSrc: asset('icons/daily.svg'), tone: 'mall-gold' },
+  { key: 'study', label: '学习', iconSrc: asset('icons/study.svg'), tone: 'mall-blue' },
+  { key: 'sport', label: '运动', iconSrc: asset('icons/sport.svg'), tone: 'mall-green' },
+  { key: 'fashion', label: '穿搭', iconSrc: asset('icons/fashion.svg'), tone: 'mall-rose' },
+  { key: 'shop', label: '店铺', iconSrc: asset('icons/shop.svg'), tone: 'mall-red' },
+  { key: 'coupon', label: '领券', iconSrc: asset('icons/coupon.svg'), tone: 'mall-orange' },
+  { key: 'nearby', label: '校园', iconSrc: asset('icons/campus.svg'), tone: 'mall-green' },
 ];
 
 export const bannerList = [

@@ -1,0 +1,11 @@
+:root {
+  --mall-red: #ff0036;
+  --mall-orange: #ff5a00;
+  --mall-hot: #ff2b00;
+  --mall-bg: #fff2ec;
+  --mall-card: #ffffff;
+  --mall-text: #171717;
+  --mall-muted: #8a8f9c;
+  --mall-shadow: 0 10px 28px rgba(255, 77, 0, 0.08);
+  --glass-border: rgba(255, 255, 255, 0.58);
+}

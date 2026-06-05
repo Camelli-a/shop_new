@@ -1,0 +1,47 @@
+.App {
+  min-height: 100vh;
+}
+
+.mall-home {
+  min-height: 100vh;
+  color: var(--mall-text);
+  background:
+    radial-gradient(circle at 10% 16%, rgba(255, 255, 255, 0.9), transparent 18%),
+    radial-gradient(circle at 90% 0, rgba(255, 0, 54, 0.12), transparent 26%),
+    linear-gradient(180deg, #fff0ea 0, #fff7f3 25%, #f6f7fb 100%);
+  padding: 0 10px 84px;
+}
+
+.phone-app {
+  width: min(430px, 100%);
+  margin: 0 auto;
+}
+
+.mall-placeholder {
+  background: #fff;
+}
+
+.placeholder-page {
+  display: grid;
+  min-height: calc(100vh - 84px);
+  place-items: center;
+}
+
+.placeholder-page strong {
+  color: #c7ccd6;
+  font-size: 24px;
+  font-weight: 900;
+}
+
+@media (min-width: 768px) {
+  .mall-home {
+    padding-top: 12px;
+  }
+}
+
+@media (max-width: 360px) {
+  .mall-home {
+    padding-right: 8px;
+    padding-left: 8px;
+  }
+}
