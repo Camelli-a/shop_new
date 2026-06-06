@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 
 import App from './App';
 import LoginPage from './pages/LoginPage';
@@ -13,7 +13,22 @@ import CartPage from "./pages/CartPage";
 import ProfilePage from "./pages/ProfilePage";
 import PersonalInfoPage from "./pages/PersonalInfoPage";
 import ProtectedRoute from "./components/ProtectedRoute";
+import AdminLoginPage from './pages/admin/AdminLoginPage';
+import AdminLayout from './pages/admin/AdminLayout';
+import AdminHomePage from './pages/admin/AdminHomePage';
+import ProductManagement from './pages/admin/ProductManagement';
+import CategoryManagement from './pages/admin/CategoryManagement';
+import OrderManagement from './pages/admin/OrderManagement';
+import UserManagement from './pages/admin/UserManagement';
+import RoleManagement from './pages/admin/RoleManagement';
 
+const AdminProtectedRoute = ({ children }) => {
+    const token = localStorage.getItem('adminToken');
+    if (!token) {
+        return <Navigate to="/admin/login" replace />;
+    }
+    return children;
+};
 const router = createBrowserRouter([
   {
     path: "/",
@@ -73,7 +88,45 @@ const router = createBrowserRouter([
         ]
       },
     ]
-  }
+  },
+  {
+    path: "/admin/login",
+    Component: AdminLoginPage,
+  },
+  {
+    path: "/admin",
+    element: <AdminProtectedRoute><AdminLayout /></AdminProtectedRoute>,
+    children: [
+      {
+        path: "",
+        element: <Navigate to="/admin/home" replace />,
+      },
+      {
+        path: "home",
+        Component: AdminHomePage,
+      },
+      {
+        path: "products",
+        Component: ProductManagement,
+      },
+      {
+        path: "categories",
+        Component: CategoryManagement,
+      },
+      {
+        path: "orders",
+        Component: OrderManagement,
+      },
+      {
+        path: "users",
+        Component: UserManagement,
+      },
+      {
+        path: "roles",
+        Component: RoleManagement,
+      },
+    ],
+  },
 ]);
 
 export default router;

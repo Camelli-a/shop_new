@@ -1,0 +1,7 @@
+@import './AdminCommon.css';
+
+.role-management {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
