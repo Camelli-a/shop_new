@@ -1,8 +1,6 @@
-import { createContext, useContext, useState } from 'react';
+import { useState } from 'react';
+import { AuthContext } from './useAuth';
 import userService from '../services/userService';
-
-// Create auth context
-const AuthContext = createContext();
 
 // Auth provider component
 const AuthProvider = ({ children }) => {
@@ -44,13 +42,4 @@ const AuthProvider = ({ children }) => {
   );
 };
 
-// Custom hook for convenience
-const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-};
-
-export { AuthContext, AuthProvider, useAuth };
+export { AuthProvider };
