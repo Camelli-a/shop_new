@@ -1,0 +1,165 @@
+/* PersonalInfoPage styles — uses tokens.css CSS variables */
+
+.personal-info-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: min(430px, 100%);
+  margin: 0 auto;
+  background: var(--mall-bg);
+  font-family: "Nunito Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+  color: var(--mall-text);
+}
+
+/* Header */
+.personal-info-header {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  background: var(--mall-card);
+  border-bottom: 1px solid var(--glass-border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.personal-info-back-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 18px;
+  color: var(--mall-text);
+}
+
+.personal-info-header-title {
+  flex: 1;
+  text-align: center;
+  font-size: 17px;
+  font-weight: 700;
+  margin: 0;
+  padding-right: 44px; /* balance the back button width */
+}
+
+/* Content area */
+.personal-info-content {
+  padding: 24px 16px;
+  flex: 1;
+}
+
+/* Avatar section */
+.personal-info-avatar-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 28px;
+}
+
+.personal-info-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--glass-border);
+  box-shadow: var(--mall-shadow);
+}
+
+/* Info fields */
+.personal-info-fields {
+  background: var(--mall-card);
+  border-radius: 14px;
+  padding: 0;
+  overflow: hidden;
+  box-shadow: var(--mall-shadow);
+}
+
+.personal-info-field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 52px;
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.personal-info-field:last-child {
+  border-bottom: none;
+}
+
+.personal-info-field-label {
+  font-size: 14px;
+  color: var(--mall-muted);
+  flex-shrink: 0;
+  min-width: 60px;
+}
+
+.personal-info-field-value {
+  font-size: 15px;
+  color: var(--mall-text);
+  text-align: right;
+  flex: 1;
+}
+
+/* Nickname input */
+.personal-info-nickname-input {
+  text-align: right;
+  border-radius: 8px;
+  min-height: 44px;
+}
+
+.personal-info-nickname-input .ant-input {
+  text-align: right;
+}
+
+/* Error message */
+.personal-info-error {
+  color: var(--mall-red);
+  font-size: 12px;
+  text-align: right;
+  padding: 4px 16px 8px;
+  margin-top: -4px;
+}
+
+/* Save button area */
+.personal-info-save-area {
+  padding: 24px 16px;
+}
+
+.personal-info-save-btn {
+  width: 100%;
+  min-height: 44px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--mall-red);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: opacity 150ms ease, transform 150ms ease;
+}
+
+.personal-info-save-btn:hover,
+.personal-info-save-btn:focus {
+  background: var(--mall-red) !important;
+  color: #fff !important;
+  opacity: 0.9;
+}
+
+.personal-info-save-btn:active {
+  transform: scale(0.97);
+}
+
+/* Responsive: small screens ≤360px */
+@media (max-width: 360px) {
+  .personal-info-content {
+    padding: 16px 8px;
+  }
+
+  .personal-info-save-area {
+    padding: 16px 8px;
+  }
+}
