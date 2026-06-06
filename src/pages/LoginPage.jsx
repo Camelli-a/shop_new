@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, useLocation, Navigate } from 'react-router';
 import { Form, Input, Button } from 'antd';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../contexts/useAuth';
 import { LogoutOutlined } from '@ant-design/icons';
 import '../styles/login.css';
 
