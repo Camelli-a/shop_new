@@ -11,6 +11,8 @@ import OrderDetailPage from "./pages/OrderDetailPage";
 import CategoryPage from "./pages/CategoryPage";
 import CartPage from "./pages/CartPage";
 import ProfilePage from "./pages/ProfilePage";
+import PersonalInfoPage from "./pages/PersonalInfoPage";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const router = createBrowserRouter([
   {
@@ -34,32 +36,41 @@ const router = createBrowserRouter([
         Component: CategoryPage,
       },
       {
-        path: "/cart",
-        Component: CartPage,
-      },
-      {
-        path: "/profile",
-        Component: ProfilePage,
-      },
-      {
         path: "/detail/:goodId",
         Component: DetailPage,
       },
       {
-        path: "/createOrder/:goodId",
-        Component: CreateOrderPage,
-      },
-      {
-        path: "/pay/:orderId",
-        Component: PayPage,
-      },
-      {
-        path: "/orderList",
-        Component: OrderListPage,
-      },
-      {
-        path: "/orderDetail/:orderId",
-        Component: OrderDetailPage,
+        element: <ProtectedRoute />,
+        children: [
+          {
+            path: "/cart",
+            Component: CartPage,
+          },
+          {
+            path: "/profile",
+            Component: ProfilePage,
+          },
+          {
+            path: "/profile/info",
+            Component: PersonalInfoPage,
+          },
+          {
+            path: "/createOrder/:goodId",
+            Component: CreateOrderPage,
+          },
+          {
+            path: "/orderList",
+            Component: OrderListPage,
+          },
+          {
+            path: "/orderDetail/:orderId",
+            Component: OrderDetailPage,
+          },
+          {
+            path: "/pay/:orderId",
+            Component: PayPage,
+          },
+        ]
       },
     ]
   }

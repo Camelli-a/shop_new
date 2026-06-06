@@ -7,6 +7,7 @@ import './index.css';
 import { RouterProvider } from 'react-router';
 import router from './router';
 import { ServiceProvider } from './contexts/ServiceContext';
+import { AuthProvider } from './contexts/AuthContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -27,8 +28,10 @@ root.render(
     >
       <AntdApp>
         <ServiceProvider>
-          <RouterProvider router={router}>
-          </RouterProvider>
+          <AuthProvider>
+            <RouterProvider router={router}>
+            </RouterProvider>
+          </AuthProvider>
         </ServiceProvider>
       </AntdApp>
     </ConfigProvider>
