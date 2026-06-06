@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { Input, Button, message } from 'antd';
 import { LeftOutlined } from '@ant-design/icons';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../contexts/useAuth';
 import '../styles/personalInfo.css';
 
 const PersonalInfoPage = () => {

@@ -11,7 +11,7 @@ import { Button, Modal } from 'antd';
 
 import BottomNav from '../components/BottomNav';
 import { ORDER_STATUS } from '../constants/orderStatus';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../contexts/useAuth';
 import '../styles/profile.css';
 
 const ProfilePage = () => {
