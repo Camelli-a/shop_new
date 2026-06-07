@@ -92,6 +92,14 @@ const HomePage = () => {
       ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
+  const handleQuickEntryClick = key => {
+    if (['shop', 'coupon', 'nearby'].includes(key)) {
+      message.info('该频道为首页展示入口，后续可接入独立模块');
+      return;
+    }
+    navigate(`/category?tab=${key}`);
+  };
+
   const handleTopChannelClick = key => {
     setActiveTopChannel(key);
     if (['all', 'digital', 'food', 'life'].includes(key)) {
@@ -189,7 +197,7 @@ const HomePage = () => {
               className={`quick-entry tone-${category.tone}${activeCategory === category.key ? ' is-active' : ''}`}
               key={category.key}
               type="button"
-              onClick={() => handleCategoryClick(category.key)}
+              onClick={() => handleQuickEntryClick(category.key)}
             >
               <span>
                 <img alt="" src={category.iconSrc} />
