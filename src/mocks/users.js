@@ -1,4 +1,5 @@
 export const MOCK_USER = {
+  id: 1,
   username: "admin",
   password: "123456",
   nickname: "京东用户",

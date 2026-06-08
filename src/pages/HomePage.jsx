@@ -16,7 +16,6 @@ import {
 import { App, Button, Carousel, Empty, Input } from 'antd';
 
 import BottomNav from '../components/BottomNav';
-import { STORAGE_KEYS } from '../constants/storageKeys';
 import { ServiceContext } from '../contexts/ServiceContext';
 import {
   categoryList,
@@ -50,19 +49,7 @@ const HomePage = () => {
   const [searchText, setSearchText] = useState('');
   const [activeCategory, setActiveCategory] = useState('all');
   const [activeTopChannel, setActiveTopChannel] = useState('all');
-  const [cartCount, setCartCount] = useState(() => {
-    const storedCart = localStorage.getItem(STORAGE_KEYS.cart);
-    if (!storedCart) return 0;
-
-    try {
-      const cartList = JSON.parse(storedCart);
-      return Array.isArray(cartList)
-        ? cartList.reduce((total, item) => total + (item.count || 1), 0)
-        : 0;
-    } catch {
-      return 0;
-    }
-  });
+  const [cartCount, setCartCount] = useState(() => services.cart.getCartCount());
   const deferredSearchText = useDeferredValue(searchText.trim().toLowerCase());
 
   const goods = services.good.getGoodList().map(enrichGood);
@@ -111,24 +98,8 @@ const HomePage = () => {
 
   const handleAddToCart = (event, good) => {
     event.stopPropagation();
-    const storedCart = localStorage.getItem(STORAGE_KEYS.cart);
-    let cartList;
-
-    try {
-      cartList = storedCart ? JSON.parse(storedCart) : [];
-    } catch {
-      cartList = [];
-    }
-
-    const existingItem = cartList.find(item => item.id === good.id);
-    if (existingItem) {
-      existingItem.count = (existingItem.count || 1) + 1;
-    } else {
-      cartList.push({ ...good, count: 1 });
-    }
-
-    localStorage.setItem(STORAGE_KEYS.cart, JSON.stringify(cartList));
-    setCartCount(cartList.reduce((total, item) => total + (item.count || 1), 0));
+    services.cart.addItem({ ...good, sku: '默认规格', quantity: 1 });
+    setCartCount(services.cart.getCartCount());
     message.success('已加入购物车');
   };
 

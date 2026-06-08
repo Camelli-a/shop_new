@@ -1,4 +1,5 @@
 import { createContext } from 'react';
+import cartService from '../services/cartService';
 import goodService from '../services/goodService';
 import orderService from '../services/orderService';
 
@@ -9,6 +10,7 @@ const ServiceContext = createContext();
 const ServiceProvider = ({ children }) => {
   // Define the state and functions here
   const value = {
+    cart: cartService,
     good: goodService,
     order: orderService,
   }

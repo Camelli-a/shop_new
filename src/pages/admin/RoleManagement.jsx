@@ -1,15 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import './RoleManagement.css';
 
 function RoleManagement() {
   const [roles, setRoles] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    fetchRoles();
-  }, []);
-
-  const fetchRoles = async () => {
+  const fetchRoles = useCallback(async () => {
     setLoading(true);
     try {
       const response = await fetch('http://localhost:5000/api/admin/roles');
@@ -22,7 +18,11 @@ function RoleManagement() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    void Promise.resolve().then(fetchRoles);
+  }, [fetchRoles]);
 
   const permissionNames = {
     dashboard: '首页',

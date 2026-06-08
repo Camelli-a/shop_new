@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import './ProductManagement.css';
 
 function ProductManagement() {
@@ -21,12 +21,7 @@ function ProductManagement() {
     status: 1
   });
 
-  useEffect(() => {
-    fetchCategories();
-    fetchProducts();
-  }, [pagination.page, pagination.pageSize, filters]);
-
-  const fetchCategories = async () => {
+  const fetchCategories = useCallback(async () => {
     try {
       const response = await fetch('http://localhost:5000/api/admin/categories');
       const result = await response.json();
@@ -36,9 +31,9 @@ function ProductManagement() {
     } catch (err) {
       console.error('获取分类失败', err);
     }
-  };
+  }, []);
 
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     setLoading(true);
     try {
       const params = new URLSearchParams({
@@ -57,7 +52,14 @@ function ProductManagement() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filters, pagination.page, pagination.pageSize]);
+
+  useEffect(() => {
+    void Promise.resolve().then(() => Promise.all([
+      fetchCategories(),
+      fetchProducts(),
+    ]));
+  }, [fetchCategories, fetchProducts]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

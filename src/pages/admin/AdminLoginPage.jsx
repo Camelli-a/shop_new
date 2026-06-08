@@ -33,7 +33,7 @@ function AdminLoginPage() {
       } else {
         setError(result.message || '登录失败');
       }
-    } catch (err) {
+    } catch {
       setError('网络错误，请确保后端服务已启动');
     } finally {
       setLoading(false);

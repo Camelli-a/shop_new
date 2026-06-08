@@ -1,15 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import './AdminHomePage.css';
 
 function AdminHomePage() {
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchDashboardData();
-  }, []);
-
-  const fetchDashboardData = async () => {
+  const fetchDashboardData = useCallback(async () => {
     try {
       const response = await fetch('http://localhost:5000/api/admin/dashboard');
       const result = await response.json();
@@ -21,7 +17,11 @@ function AdminHomePage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    void Promise.resolve().then(fetchDashboardData);
+  }, [fetchDashboardData]);
 
   const statsCards = dashboardData ? [
     { title: '用户总数', value: dashboardData.totalUsers, icon: '👥', color: '#1890ff' },

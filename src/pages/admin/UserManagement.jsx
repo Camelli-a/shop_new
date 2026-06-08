@@ -1,15 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import './UserManagement.css';
 
 function UserManagement() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    fetchUsers();
-  }, []);
-
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     setLoading(true);
     try {
       const response = await fetch('http://localhost:5000/api/admin/users');
@@ -22,7 +18,11 @@ function UserManagement() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    void Promise.resolve().then(fetchUsers);
+  }, [fetchUsers]);
 
   const getStatusText = (status) => status === 1 ? '启用' : '禁用';
   const getStatusClass = (status) => status === 1 ? 'status-active' : 'status-inactive';
