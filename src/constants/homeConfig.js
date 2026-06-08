@@ -83,6 +83,8 @@ export const productImageMap = {
   9: asset('jd-09.png'),
   10: asset('jd-10.png'),
   11: asset('jd-11.png'),
+  12: asset('jd-13.png'),
+  13: asset('jd-14.png'),
 };
 
 export const bottomTabs = [
