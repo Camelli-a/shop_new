@@ -142,6 +142,32 @@ export const mockGoods = [
     description: '当日发货，24 期免息，黑色系手机榜人气款。',
     coverTone: 'white',
   },
+  {
+    id: 12,
+    name: '笋小样 网红竹笋零食礼包',
+    price: 29.9,
+    categoryId: 'food',
+    categoryName: '零食',
+    img: '/assets/home/jd-13.png',
+    tag: '热销',
+    sales: 256000,
+    rating: 4.8,
+    description: '低卡爽脆，解馋不长胖，宿舍追剧夜自习必备小零食。',
+    coverTone: 'yellow',
+  },
+  {
+    id: 13,
+    name: '威尔胜 Tour V 碳素网球拍',
+    price: 388,
+    categoryId: 'sport',
+    categoryName: '运动',
+    img: '/assets/home/jd-14.png',
+    tag: '新品',
+    sales: 43000,
+    rating: 4.7,
+    description: '轻量碳素拍框，校园社团和初学进阶都适用，附赠拍包。',
+    coverTone: 'blue',
+  },
 ];
 
 export const legacyGoodNames = [

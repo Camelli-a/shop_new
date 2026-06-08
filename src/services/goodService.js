@@ -60,7 +60,12 @@ class GoodService {
         this._resetToMockData();
         return;
       }
-      this.list = Array.isArray(parsedList) ? parsedList : cloneGoods();
+      // 若缓存条数少于最新 mock 数据，说明 mock 有新增，重置以补充新商品
+      if (!Array.isArray(parsedList) || parsedList.length < mockGoods.length) {
+        this._resetToMockData();
+        return;
+      }
+      this.list = parsedList;
     } catch {
       this._resetToMockData();
     }
