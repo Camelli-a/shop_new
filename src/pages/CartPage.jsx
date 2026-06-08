@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import {
   CheckCircleFilled,
@@ -7,7 +7,7 @@ import {
   PlusOutlined,
   ShoppingCartOutlined,
 } from '@ant-design/icons';
-import { Empty, Modal } from 'antd';
+import { App, Empty, Modal } from 'antd';
 
 import BottomNav from '../components/BottomNav';
 import { ServiceContext } from '../contexts/ServiceContext';
@@ -16,9 +16,26 @@ import '../styles/transaction.css';
 const CartPage = () => {
   const services = useContext(ServiceContext);
   const navigate = useNavigate();
-  const [cartList, setCartList] = useState(() => services.cart.getCartList());
+  const { message } = App.useApp();
+  const [cartList, setCartList] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState('');
 
-  const refresh = () => setCartList(services.cart.getCartList());
+  const refresh = useCallback(async () => {
+    try {
+      const list = await services.cart.getCartList();
+      setCartList(list);
+      setLoadError('');
+    } catch (error) {
+      setLoadError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  }, [services]);
+
+  useEffect(() => {
+    void Promise.resolve().then(refresh);
+  }, [refresh]);
   const selectedItems = cartList.filter(item => item.selected);
   const allSelected = cartList.length > 0 && selectedItems.length === cartList.length;
   const totalAmount = selectedItems.reduce(
@@ -26,9 +43,13 @@ const CartPage = () => {
     0
   );
 
-  const updateQuantity = (cartKey, quantity) => {
-    services.cart.updateQuantity(cartKey, quantity);
-    refresh();
+  const updateQuantity = async (cartKey, quantity) => {
+    try {
+      await services.cart.updateQuantity(cartKey, quantity);
+      await refresh();
+    } catch (error) {
+      message.error(error.message);
+    }
   };
 
   const removeItem = item => {
@@ -37,9 +58,13 @@ const CartPage = () => {
       content: `确定从购物车移除“${item.name}”吗？`,
       okText: '移除',
       cancelText: '取消',
-      onOk: () => {
-        services.cart.removeItem(item.cartKey);
-        refresh();
+      onOk: async () => {
+        try {
+          await services.cart.removeItem(item.cartKey);
+          await refresh();
+        } catch (error) {
+          message.error(error.message);
+        }
       },
     });
   };
@@ -55,7 +80,14 @@ const CartPage = () => {
           <span className="transaction-count">{cartList.length} 种商品</span>
         </header>
 
-        {cartList.length === 0 ? (
+        {loading ? (
+          <div className="transaction-empty">购物车加载中...</div>
+        ) : loadError ? (
+          <div className="transaction-empty">
+            <strong>{loadError}</strong>
+            <button type="button" className="primary-action compact" onClick={refresh}>重新加载</button>
+          </div>
+        ) : cartList.length === 0 ? (
           <div className="transaction-empty">
             <Empty
               image={<ShoppingCartOutlined className="transaction-empty-icon" />}
@@ -73,9 +105,13 @@ const CartPage = () => {
                   type="button"
                   className="select-button"
                   aria-label={item.selected ? '取消选择' : '选择商品'}
-                  onClick={() => {
-                    services.cart.setSelected(item.cartKey, !item.selected);
-                    refresh();
+                  onClick={async () => {
+                    try {
+                      const list = await services.cart.setSelected(item.cartKey, !item.selected);
+                      setCartList(list);
+                    } catch (error) {
+                      message.error(error.message);
+                    }
                   }}
                 >
                   <CheckCircleFilled />
@@ -138,9 +174,13 @@ const CartPage = () => {
           <button
             type="button"
             className={`select-all-button${allSelected ? ' is-selected' : ''}`}
-            onClick={() => {
-              services.cart.setAllSelected(!allSelected);
-              refresh();
+            onClick={async () => {
+              try {
+                const list = await services.cart.setAllSelected(!allSelected);
+                setCartList(list);
+              } catch (error) {
+                message.error(error.message);
+              }
             }}
           >
             <CheckCircleFilled />

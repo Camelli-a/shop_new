@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router';
 import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
 import { App } from 'antd';
@@ -23,10 +23,6 @@ const formatSales = n => {
   return String(num);
 };
 
-const DISPLAY_CATEGORIES = categoryList.filter(
-  c => !['shop', 'coupon', 'nearby'].includes(c.key)
-);
-
 const sortGoods = (goods, sortKey) => {
   const list = [...goods];
   if (sortKey === 'price_asc') return list.sort((a, b) => a.price - b.price);
@@ -44,9 +40,45 @@ const CategoryPage = () => {
   const activeCategory = searchParams.get('tab') || 'all';
   const [sortKey, setSortKey] = useState('default');
   const [searchText, setSearchText] = useState('');
-  const [cartCount, setCartCount] = useState(() => services.cart.getCartCount());
+  const [cartCount, setCartCount] = useState(0);
+  const [allGoods, setAllGoods] = useState([]);
+  const [displayCategories, setDisplayCategories] = useState(
+    categoryList.filter(c => !['shop', 'coupon', 'nearby'].includes(c.key))
+  );
+  const [loadError, setLoadError] = useState('');
 
-  const allGoods = services.good.getGoodList();
+  useEffect(() => {
+    let active = true;
+    void Promise.resolve().then(async () => {
+      try {
+        const [goods, count, backendCategories] = await Promise.all([
+          services.good.getGoodList(),
+          services.cart.getCartCount(),
+          services.category.getCategoryList(),
+        ]);
+        if (active) {
+          setAllGoods(goods);
+          setCartCount(count);
+          const configMap = Object.fromEntries(categoryList.map(item => [item.key, item]));
+          setDisplayCategories([
+            configMap.all,
+            ...backendCategories.map((item, index) => ({
+              key: item.id,
+              label: item.name,
+              iconSrc: item.icon || configMap[item.id]?.iconSrc || '/assets/home/icons/recommend.svg',
+              tone: configMap[item.id]?.tone || ['red', 'blue', 'green', 'yellow'][index % 4],
+            })),
+          ].filter(Boolean));
+          setLoadError('');
+        }
+      } catch (error) {
+        if (active) setLoadError(error.message);
+      }
+    });
+    return () => {
+      active = false;
+    };
+  }, [services]);
 
   const filteredGoods = sortGoods(
     allGoods.filter(good => {
@@ -60,21 +92,25 @@ const CategoryPage = () => {
     sortKey
   );
 
-  const handleAddToCart = (e, good) => {
+  const handleAddToCart = async (e, good) => {
     e.stopPropagation();
-    services.cart.addItem({ ...good, sku: '默认规格', quantity: 1 });
-    setCartCount(services.cart.getCartCount());
-    message.success('已加入购物车');
+    try {
+      const cart = await services.cart.addItem({ ...good, sku: '默认规格', quantity: 1 });
+      setCartCount(cart.reduce((total, item) => total + item.quantity, 0));
+      message.success('已加入购物车');
+    } catch (error) {
+      message.error(error.message);
+    }
   };
 
   const activeCategoryLabel =
-    DISPLAY_CATEGORIES.find(c => c.key === activeCategory)?.label || '全部';
+    displayCategories.find(c => c.key === activeCategory)?.label || '全部';
 
   return (
     <div className="category-page">
       <div className="category-layout">
         <aside className="category-sidebar" aria-label="商品分类">
-          {DISPLAY_CATEGORIES.map(cat => (
+          {displayCategories.map(cat => (
             <button
               key={cat.key}
               type="button"
@@ -133,7 +169,9 @@ const CategoryPage = () => {
             <span className="category-count">{filteredGoods.length} 件</span>
           </div>
 
-          {filteredGoods.length > 0 ? (
+          {loadError ? (
+            <div className="category-empty"><p>加载失败</p><span>{loadError}</span></div>
+          ) : filteredGoods.length > 0 ? (
             <div className="category-goods-grid">
               {filteredGoods.map(good => (
                 <article

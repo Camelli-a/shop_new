@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import {
   AlipayCircleFilled,
@@ -25,20 +25,36 @@ const PayPage = () => {
   const { message } = App.useApp();
   const [payMethod, setPayMethod] = useState(PAYMENT_METHODS[0].key);
   const [paying, setPaying] = useState(false);
-  const order = services.order.getOrderById(orderId);
+  const [order, setOrder] = useState(null);
+  const [loadError, setLoadError] = useState('');
+
+  useEffect(() => {
+    let active = true;
+    void Promise.resolve().then(async () => {
+      try {
+        const data = await services.order.getOrderById(orderId);
+        if (active) setOrder(data);
+      } catch (error) {
+        if (active) setLoadError(error.message);
+      }
+    });
+    return () => {
+      active = false;
+    };
+  }, [orderId, services]);
 
   if (!order) {
     return (
       <main className="transaction-page">
         <section className="phone-app transaction-empty-page">
-          <h1>订单不存在</h1>
+          <h1>{loadError || '订单加载中...'}</h1>
           <button type="button" className="primary-action compact" onClick={() => navigate('/orderList')}>返回订单列表</button>
         </section>
       </main>
     );
   }
 
-  const handlePay = () => {
+  const handlePay = async () => {
     if (order.status !== ORDER_STATUS.unpaid) {
       message.info('该订单已经支付');
       navigate(`/orderDetail/${order.id}`, { replace: true });
@@ -46,14 +62,14 @@ const PayPage = () => {
     }
 
     setPaying(true);
-    const success = services.order.payOrder(order.id, payMethod);
-    if (!success) {
-      message.error('支付失败，请稍后重试');
+    try {
+      await services.order.payOrder(order.id, payMethod);
+      message.success('支付成功');
+      navigate(`/orderDetail/${order.id}`, { replace: true });
+    } catch (error) {
+      message.error(error.message);
       setPaying(false);
-      return;
     }
-    message.success('支付成功');
-    navigate(`/orderDetail/${order.id}`, { replace: true });
   };
 
   return (

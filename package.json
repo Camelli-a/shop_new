@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "server": "node server/server.js",
+    "test:api": "node server/smoke-test.js",
     "build": "vite build",
     "lint": "eslint .",
     "lint:fix": "eslint --fix",

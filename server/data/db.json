@@ -1,0 +1,386 @@
+{
+  "categories": [
+    {
+      "id": "digital",
+      "name": "数码好物",
+      "icon": "/assets/home/icons/digital.svg",
+      "sort": 1,
+      "status": 1,
+      "createTime": "2026-06-08T12:51:12.506Z"
+    },
+    {
+      "id": "study",
+      "name": "学习办公",
+      "icon": "/assets/home/icons/study.svg",
+      "sort": 2,
+      "status": 1,
+      "createTime": "2026-06-08T12:51:12.506Z"
+    },
+    {
+      "id": "fashion",
+      "name": "服饰配件",
+      "icon": "/assets/home/icons/fashion.svg",
+      "sort": 3,
+      "status": 1,
+      "createTime": "2026-06-08T12:51:12.506Z"
+    },
+    {
+      "id": "food",
+      "name": "食品零食",
+      "icon": "/assets/home/icons/snacks.svg",
+      "sort": 4,
+      "status": 1,
+      "createTime": "2026-06-08T12:51:12.506Z"
+    },
+    {
+      "id": "life",
+      "name": "生活日用",
+      "icon": "/assets/home/icons/daily.svg",
+      "sort": 5,
+      "status": 1,
+      "createTime": "2026-06-08T12:51:12.506Z"
+    },
+    {
+      "id": "sport",
+      "name": "运动户外",
+      "icon": "/assets/home/icons/sport.svg",
+      "sort": 6,
+      "status": 1,
+      "createTime": "2026-06-08T12:51:12.506Z"
+    }
+  ],
+  "products": [
+    {
+      "id": 1,
+      "name": "ASUS Ascent GX10 AI迷你高性能计算机",
+      "price": 665.1,
+      "originalPrice": 851,
+      "categoryId": "digital",
+      "categoryName": "数码好物",
+      "img": "/assets/home/jd-01.png",
+      "tag": "自营",
+      "sales": 3360001,
+      "rating": 4.9,
+      "stock": 499,
+      "description": "精选商城好物，兼顾价格、品质和日常使用体验。",
+      "status": 1,
+      "createTime": "2026-06-08T12:51:12.506Z",
+      "updateTime": "2026-06-08T14:22:01.810Z"
+    },
+    {
+      "id": 2,
+      "name": "华硕 ROG RTX5070 电竞主机整机",
+      "price": 5299,
+      "originalPrice": 6783,
+      "categoryId": "digital",
+      "categoryName": "数码好物",
+      "img": "/assets/home/jd-02.png",
+      "tag": "补贴",
+      "sales": 182000,
+      "rating": 4.8,
+      "stock": 500,
+      "description": "精选商城好物，兼顾价格、品质和日常使用体验。",
+      "status": 1,
+      "createTime": "2026-06-08T12:51:12.506Z",
+      "updateTime": "2026-06-08T12:51:12.506Z"
+    },
+    {
+      "id": 3,
+      "name": "罗技 G 系列联名无线鼠标",
+      "price": 665.1,
+      "originalPrice": 851,
+      "categoryId": "digital",
+      "categoryName": "数码好物",
+      "img": "/assets/home/jd-03.png",
+      "tag": "热销",
+      "sales": 1520000,
+      "rating": 4.7,
+      "stock": 500,
+      "description": "精选商城好物，兼顾价格、品质和日常使用体验。",
+      "status": 1,
+      "createTime": "2026-06-08T12:51:12.506Z",
+      "updateTime": "2026-06-08T12:51:12.506Z"
+    },
+    {
+      "id": 4,
+      "name": "Apple Watch 黑色运动款智能手表",
+      "price": 1299,
+      "originalPrice": 1663,
+      "categoryId": "digital",
+      "categoryName": "数码好物",
+      "img": "/assets/home/jd-04.png",
+      "tag": "新品",
+      "sales": 98000,
+      "rating": 4.9,
+      "stock": 500,
+      "description": "精选商城好物，兼顾价格、品质和日常使用体验。",
+      "status": 1,
+      "createTime": "2026-06-08T12:51:12.506Z",
+      "updateTime": "2026-06-08T12:51:12.506Z"
+    },
+    {
+      "id": 5,
+      "name": "MECH Guardian 智能机器狗编程玩具",
+      "price": 299,
+      "originalPrice": 383,
+      "categoryId": "study",
+      "categoryName": "学习办公",
+      "img": "/assets/home/jd-05.png",
+      "tag": "科技",
+      "sales": 24600,
+      "rating": 4.8,
+      "stock": 500,
+      "description": "精选商城好物，兼顾价格、品质和日常使用体验。",
+      "status": 1,
+      "createTime": "2026-06-08T12:51:12.506Z",
+      "updateTime": "2026-06-08T12:51:12.506Z"
+    },
+    {
+      "id": 6,
+      "name": "宝可梦精灵球钥匙扣收纳包",
+      "price": 39.9,
+      "originalPrice": 51,
+      "categoryId": "fashion",
+      "categoryName": "服饰配件",
+      "img": "/assets/home/jd-06.png",
+      "tag": "潮玩",
+      "sales": 128000,
+      "rating": 4.9,
+      "stock": 500,
+      "description": "精选商城好物，兼顾价格、品质和日常使用体验。",
+      "status": 1,
+      "createTime": "2026-06-08T12:51:12.506Z",
+      "updateTime": "2026-06-08T12:51:12.506Z"
+    },
+    {
+      "id": 7,
+      "name": "AirPods Pro 主动降噪无线耳机",
+      "price": 665.1,
+      "originalPrice": 851,
+      "categoryId": "digital",
+      "categoryName": "数码好物",
+      "img": "/assets/home/jd-07.png",
+      "tag": "自营",
+      "sales": 1520000,
+      "rating": 4.8,
+      "stock": 500,
+      "description": "精选商城好物，兼顾价格、品质和日常使用体验。",
+      "status": 1,
+      "createTime": "2026-06-08T12:51:12.506Z",
+      "updateTime": "2026-06-08T12:51:12.506Z"
+    },
+    {
+      "id": 8,
+      "name": "Apple Watch 深空黑运动表",
+      "price": 1599,
+      "originalPrice": 2047,
+      "categoryId": "digital",
+      "categoryName": "数码好物",
+      "img": "/assets/home/jd-08.png",
+      "tag": "低价",
+      "sales": 76000,
+      "rating": 4.8,
+      "stock": 500,
+      "description": "精选商城好物，兼顾价格、品质和日常使用体验。",
+      "status": 1,
+      "createTime": "2026-06-08T12:51:12.506Z",
+      "updateTime": "2026-06-08T12:51:12.506Z"
+    },
+    {
+      "id": 9,
+      "name": "从 RTL 级代码到 FPGA 加速大模型训练与推理",
+      "price": 78,
+      "originalPrice": 100,
+      "categoryId": "study",
+      "categoryName": "学习办公",
+      "img": "/assets/home/jd-09.png",
+      "tag": "教材",
+      "sales": 23000,
+      "rating": 4.7,
+      "stock": 500,
+      "description": "精选商城好物，兼顾价格、品质和日常使用体验。",
+      "status": 1,
+      "createTime": "2026-06-08T12:51:12.506Z",
+      "updateTime": "2026-06-08T12:51:12.506Z"
+    },
+    {
+      "id": 10,
+      "name": "OLAY 胜肽水乳面霜护肤礼盒",
+      "price": 218,
+      "originalPrice": 279,
+      "categoryId": "life",
+      "categoryName": "生活日用",
+      "img": "/assets/home/jd-10.png",
+      "tag": "礼盒",
+      "sales": 89000,
+      "rating": 4.9,
+      "stock": 500,
+      "description": "精选商城好物，兼顾价格、品质和日常使用体验。",
+      "status": 1,
+      "createTime": "2026-06-08T12:51:12.506Z",
+      "updateTime": "2026-06-08T12:51:12.506Z"
+    },
+    {
+      "id": 11,
+      "name": "Apple iPhone 17 Pro Max 京东全球购",
+      "price": 5269.01,
+      "originalPrice": 6744,
+      "categoryId": "digital",
+      "categoryName": "数码好物",
+      "img": "/assets/home/jd-11.png",
+      "tag": "国补",
+      "sales": 3360000,
+      "rating": 4.9,
+      "stock": 500,
+      "description": "精选商城好物，兼顾价格、品质和日常使用体验。",
+      "status": 1,
+      "createTime": "2026-06-08T12:51:12.506Z",
+      "updateTime": "2026-06-08T12:51:12.506Z"
+    },
+    {
+      "id": 12,
+      "name": "笋小样 网红竹笋零食礼包",
+      "price": 29.9,
+      "originalPrice": 38,
+      "categoryId": "food",
+      "categoryName": "食品零食",
+      "img": "/assets/home/jd-13.png",
+      "tag": "热销",
+      "sales": 256000,
+      "rating": 4.8,
+      "stock": 500,
+      "description": "低卡爽脆，解馋不长胖，宿舍追剧夜自习必备小零食。",
+      "status": 1,
+      "createTime": "2026-06-08T12:51:12.506Z",
+      "updateTime": "2026-06-08T12:51:12.506Z"
+    },
+    {
+      "id": 13,
+      "name": "威尔胜 Tour V 碳素网球拍",
+      "price": 388,
+      "originalPrice": 497,
+      "categoryId": "sport",
+      "categoryName": "运动户外",
+      "img": "/assets/home/jd-14.png",
+      "tag": "新品",
+      "sales": 43000,
+      "rating": 4.7,
+      "stock": 500,
+      "description": "轻量碳素拍框，校园社团和初学进阶都适用，附赠拍包。",
+      "status": 1,
+      "createTime": "2026-06-08T12:51:12.506Z",
+      "updateTime": "2026-06-08T12:51:12.506Z"
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "username": "admin",
+      "password": "123456",
+      "role": "admin",
+      "name": "系统管理员",
+      "nickname": "京东用户",
+      "avatar": "/assets/home/icons/recommend.svg",
+      "email": "admin@example.com",
+      "phone": "13800000000",
+      "createTime": "2026-06-08T12:51:12.506Z",
+      "status": 1
+    },
+    {
+      "id": 2,
+      "username": "manager",
+      "password": "123456",
+      "role": "manager",
+      "name": "商品管理员",
+      "avatar": "/assets/home/icons/recommend.svg",
+      "email": "manager@example.com",
+      "phone": "13800000001",
+      "createTime": "2026-06-08T12:51:12.506Z",
+      "status": 1
+    },
+    {
+      "id": 3,
+      "username": "user",
+      "password": "123456",
+      "role": "user",
+      "name": "订单管理员",
+      "avatar": "/assets/home/icons/recommend.svg",
+      "email": "user@example.com",
+      "phone": "13800000002",
+      "createTime": "2026-06-08T12:51:12.506Z",
+      "status": 1
+    }
+  ],
+  "roles": [
+    {
+      "id": 1,
+      "name": "超级管理员",
+      "description": "全部后台权限",
+      "permissions": [
+        "dashboard",
+        "goods",
+        "categories",
+        "orders",
+        "users",
+        "roles"
+      ],
+      "createTime": "2026-06-08T12:51:12.506Z"
+    },
+    {
+      "id": 2,
+      "name": "商品管理员",
+      "description": "商品与分类管理",
+      "permissions": [
+        "dashboard",
+        "goods",
+        "categories"
+      ],
+      "createTime": "2026-06-08T12:51:12.506Z"
+    },
+    {
+      "id": 3,
+      "name": "订单管理员",
+      "description": "订单与用户查看",
+      "permissions": [
+        "dashboard",
+        "orders",
+        "users"
+      ],
+      "createTime": "2026-06-08T12:51:12.506Z"
+    }
+  ],
+  "carts": {
+    "1": []
+  },
+  "orders": [
+    {
+      "id": 1,
+      "orderNo": "1780928521810001",
+      "userId": 1,
+      "userName": "京东用户",
+      "userPhone": "18201500146",
+      "items": [
+        {
+          "cartKey": "1-标准版",
+          "goodId": 1,
+          "name": "ASUS Ascent GX10 AI迷你高性能计算机",
+          "img": "/assets/home/jd-01.png",
+          "sku": "标准版",
+          "quantity": 1,
+          "unitPrice": 665.1,
+          "subtotal": 665.1
+        }
+      ],
+      "totalAmount": 665.1,
+      "receiver": "京东用户",
+      "receiverPhone": "18201500146",
+      "address": "111",
+      "status": 0,
+      "payMethod": "",
+      "payTime": "",
+      "shipTime": "",
+      "receiveTime": "",
+      "createTime": "2026-06-08T14:22:01.810Z"
+    }
+  ]
+}

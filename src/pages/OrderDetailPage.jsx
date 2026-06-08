@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import {
   CheckCircleFilled,
@@ -15,13 +15,29 @@ const OrderDetailPage = () => {
   const { orderId } = useParams();
   const services = useContext(ServiceContext);
   const navigate = useNavigate();
-  const order = services.order.getOrderById(orderId);
+  const [order, setOrder] = useState(null);
+  const [loadError, setLoadError] = useState('');
+
+  useEffect(() => {
+    let active = true;
+    void Promise.resolve().then(async () => {
+      try {
+        const data = await services.order.getOrderById(orderId);
+        if (active) setOrder(data);
+      } catch (error) {
+        if (active) setLoadError(error.message);
+      }
+    });
+    return () => {
+      active = false;
+    };
+  }, [orderId, services]);
 
   if (!order) {
     return (
       <main className="transaction-page">
         <section className="phone-app transaction-empty-page">
-          <h1>订单不存在</h1>
+          <h1>{loadError || '订单加载中...'}</h1>
           <button type="button" className="primary-action compact" onClick={() => navigate('/orderList')}>返回订单列表</button>
         </section>
       </main>

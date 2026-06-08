@@ -1,4 +1,4 @@
-import { useContext, useMemo, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router';
 import { EnvironmentOutlined, LeftOutlined, SafetyCertificateOutlined } from '@ant-design/icons';
 import { App, Input } from 'antd';
@@ -18,25 +18,43 @@ const CreateOrderPage = () => {
   const [receiverPhone, setReceiverPhone] = useState(user?.phone?.includes('*') ? '' : user?.phone || '');
   const [address, setAddress] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [items, setItems] = useState([]);
+  const [loadError, setLoadError] = useState('');
 
-  const items = useMemo(() => {
-    if (!goodId) return services.cart.getSelectedItems();
-
-    const good = services.good.getGoodById(Number(goodId));
-    if (!good) return [];
-    return [{
-      ...good,
-      sku: searchParams.get('sku') || '默认规格',
-      quantity: Math.max(1, Number(searchParams.get('quantity')) || 1),
-    }];
-  }, [goodId, searchParams, services]);
+  useEffect(() => {
+    let active = true;
+    void Promise.resolve().then(async () => {
+      try {
+        let nextItems;
+        if (!goodId) {
+          nextItems = await services.cart.getSelectedItems(user?.id || 1);
+        } else {
+          const good = await services.good.getGoodById(Number(goodId));
+          nextItems = [{
+            ...good,
+            sku: searchParams.get('sku') || '默认规格',
+            quantity: Math.max(1, Number(searchParams.get('quantity')) || 1),
+          }];
+        }
+        if (active) {
+          setItems(nextItems);
+          setLoadError('');
+        }
+      } catch (error) {
+        if (active) setLoadError(error.message);
+      }
+    });
+    return () => {
+      active = false;
+    };
+  }, [goodId, searchParams, services, user?.id]);
 
   const totalAmount = items.reduce(
     (total, item) => total + Number(item.price || 0) * item.quantity,
     0
   );
 
-  const submitOrder = () => {
+  const submitOrder = async () => {
     if (!items.length) {
       message.warning('没有可结算的商品');
       navigate('/cart');
@@ -49,14 +67,13 @@ const CreateOrderPage = () => {
 
     setSubmitting(true);
     try {
-      const order = services.order.createOrder(user?.id || 1, items, {
+      const order = await services.order.createOrder(user?.id || 1, items, {
         receiver: receiver.trim(),
         receiverPhone,
         address: address.trim(),
+        userName: user?.nickname,
+        userPhone: receiverPhone,
       });
-      if (!goodId) {
-        services.cart.removeItems(items.map(item => item.cartKey));
-      }
       message.success('订单创建成功');
       navigate(`/pay/${order.id}`, { replace: true });
     } catch (error) {
@@ -75,6 +92,8 @@ const CreateOrderPage = () => {
           <h1>确认订单</h1>
           <span />
         </header>
+
+        {loadError && <section className="transaction-section">{loadError}</section>}
 
         <section className="transaction-section address-section">
           <div className="section-title">

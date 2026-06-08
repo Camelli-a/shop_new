@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import {
   LeftOutlined,
@@ -20,6 +20,7 @@ import { App } from 'antd';
 
 import { ServiceContext } from '../contexts/ServiceContext';
 import '../styles/detail.css';
+import '../styles/transaction.css';
 
 const formatPrice = price => Number(price || 0).toFixed(price % 1 ? 1 : 0);
 
@@ -79,23 +80,51 @@ const DetailPage = () => {
   const [sheetMode, setSheetMode] = useState(null);
   const [selectedSku, setSelectedSku] = useState(null);
   const [quantity, setQuantity] = useState(1);
+  const [good, setGood] = useState(null);
+  const [relatedGoods, setRelatedGoods] = useState([]);
+  const [loadError, setLoadError] = useState('');
 
-  const good = services.good.getGoodById(parsedGoodId);
+  useEffect(() => {
+    let active = true;
+    void Promise.resolve().then(async () => {
+      try {
+        const [product, allGoods] = await Promise.all([
+          services.good.getGoodById(parsedGoodId),
+          services.good.getGoodList(),
+        ]);
+        if (active) {
+          setGood(product);
+          setRelatedGoods(
+            allGoods
+              .filter(item => item.categoryId === product.categoryId && item.id !== product.id)
+              .slice(0, 6)
+          );
+          setLoadError('');
+        }
+      } catch (error) {
+        if (active) setLoadError(error.message);
+      }
+    });
+    return () => {
+      active = false;
+    };
+  }, [parsedGoodId, services]);
 
   if (!good) {
-    navigate('/home');
-    return null;
+    return (
+      <main className="detail-page">
+        <div className="detail-inner transaction-empty-page">
+          <h1>{loadError || '商品加载中...'}</h1>
+          {loadError && <button type="button" className="primary-action compact" onClick={() => navigate('/home')}>返回首页</button>}
+        </div>
+      </main>
+    );
   }
 
   const originalPrice = Math.round(Number(good.price) * 1.28);
   const discountPct = Math.round((1 - good.price / originalPrice) * 100);
   const skuConfig = getSkuConfig(good.categoryId);
   const totalPrice = (Number(good.price) * quantity).toFixed(2);
-
-  const allGoods = services.good.getGoodList();
-  const relatedGoods = allGoods
-    .filter(g => g.categoryId === good.categoryId && g.id !== good.id)
-    .slice(0, 6);
 
   const openSheet = mode => {
     setSheetMode(mode);
@@ -105,15 +134,19 @@ const DetailPage = () => {
 
   const closeSheet = () => setSheetMode(null);
 
-  const confirmSheet = () => {
+  const confirmSheet = async () => {
     if (!selectedSku) {
       message.warning('请选择规格');
       return;
     }
     if (sheetMode === 'cart') {
-      services.cart.addItem({ ...good, sku: selectedSku, quantity });
-      message.success('已加入购物车');
-      closeSheet();
+      try {
+        await services.cart.addItem({ ...good, sku: selectedSku, quantity });
+        message.success('已加入购物车');
+        closeSheet();
+      } catch (error) {
+        message.error(error.message);
+      }
     } else {
       closeSheet();
       const params = new URLSearchParams({
