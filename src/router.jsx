@@ -22,6 +22,8 @@ import OrderManagement from './pages/admin/OrderManagement';
 import UserManagement from './pages/admin/UserManagement';
 import RoleManagement from './pages/admin/RoleManagement';
 
+// Keep the small route guard next to the route table it protects.
+// eslint-disable-next-line react-refresh/only-export-components
 const AdminProtectedRoute = ({ children }) => {
     const token = localStorage.getItem('adminToken');
     if (!token) {
@@ -68,6 +70,10 @@ const router = createBrowserRouter([
           {
             path: "/profile/info",
             Component: PersonalInfoPage,
+          },
+          {
+            path: "/createOrder",
+            Component: CreateOrderPage,
           },
           {
             path: "/createOrder/:goodId",

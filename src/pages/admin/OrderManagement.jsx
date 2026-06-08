@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import './OrderManagement.css';
 
 function OrderManagement() {
@@ -8,11 +8,7 @@ function OrderManagement() {
   const [pagination, setPagination] = useState({ page: 1, pageSize: 10, total: 0 });
   const [statusFilter, setStatusFilter] = useState('');
 
-  useEffect(() => {
-    fetchOrders();
-  }, [pagination.page, pagination.pageSize, statusFilter]);
-
-  const fetchOrders = async () => {
+  const fetchOrders = useCallback(async () => {
     setLoading(true);
     try {
       const params = new URLSearchParams({
@@ -31,7 +27,11 @@ function OrderManagement() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [pagination.page, pagination.pageSize, statusFilter]);
+
+  useEffect(() => {
+    void Promise.resolve().then(fetchOrders);
+  }, [fetchOrders]);
 
   const fetchOrderDetail = async (id) => {
     try {

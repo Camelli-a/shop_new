@@ -5,7 +5,6 @@ import { App } from 'antd';
 
 import BottomNav from '../components/BottomNav';
 import { ServiceContext } from '../contexts/ServiceContext';
-import { STORAGE_KEYS } from '../constants/storageKeys';
 import { categoryList } from '../constants/homeConfig';
 import '../styles/category.css';
 
@@ -45,6 +44,7 @@ const CategoryPage = () => {
   const activeCategory = searchParams.get('tab') || 'all';
   const [sortKey, setSortKey] = useState('default');
   const [searchText, setSearchText] = useState('');
+  const [cartCount, setCartCount] = useState(() => services.cart.getCartCount());
 
   const allGoods = services.good.getGoodList();
 
@@ -62,20 +62,8 @@ const CategoryPage = () => {
 
   const handleAddToCart = (e, good) => {
     e.stopPropagation();
-    const storedCart = localStorage.getItem(STORAGE_KEYS.cart);
-    let cartList;
-    try {
-      cartList = storedCart ? JSON.parse(storedCart) : [];
-    } catch {
-      cartList = [];
-    }
-    const existing = cartList.find(item => item.id === good.id);
-    if (existing) {
-      existing.count = (existing.count || 1) + 1;
-    } else {
-      cartList.push({ ...good, count: 1 });
-    }
-    localStorage.setItem(STORAGE_KEYS.cart, JSON.stringify(cartList));
+    services.cart.addItem({ ...good, sku: '默认规格', quantity: 1 });
+    setCartCount(services.cart.getCartCount());
     message.success('已加入购物车');
   };
 
@@ -192,7 +180,7 @@ const CategoryPage = () => {
         </main>
       </div>
 
-      <BottomNav />
+      <BottomNav cartCount={cartCount} />
     </div>
   );
 };

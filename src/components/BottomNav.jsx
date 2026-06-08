@@ -1,3 +1,4 @@
+import { useContext } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import {
   AppstoreOutlined,
@@ -8,7 +9,7 @@ import {
 import { Badge } from 'antd';
 
 import { bottomTabs } from '../constants/homeConfig';
-import { STORAGE_KEYS } from '../constants/storageKeys';
+import { ServiceContext } from '../contexts/ServiceContext';
 
 const tabPathMap = {
   home: '/home',
@@ -24,20 +25,6 @@ const bottomIconMap = {
   profile: <UserOutlined />,
 };
 
-const getStoredCartCount = () => {
-  const storedCart = localStorage.getItem(STORAGE_KEYS.cart);
-  if (!storedCart) return 0;
-
-  try {
-    const cartList = JSON.parse(storedCart);
-    return Array.isArray(cartList)
-      ? cartList.reduce((total, item) => total + (item.count || 1), 0)
-      : 0;
-  } catch {
-    return 0;
-  }
-};
-
 const getActiveKey = pathname => {
   if (pathname.startsWith('/category')) return 'category';
   if (pathname.startsWith('/cart')) return 'cart';
@@ -45,10 +32,12 @@ const getActiveKey = pathname => {
   return 'home';
 };
 
-const BottomNav = ({ cartCount = getStoredCartCount() }) => {
+const BottomNav = ({ cartCount }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const services = useContext(ServiceContext);
   const activeKey = getActiveKey(location.pathname);
+  const displayedCartCount = cartCount ?? services.cart.getCartCount();
 
   return (
     <nav className="bottom-nav" aria-label="前台底部导航">
@@ -66,7 +55,7 @@ const BottomNav = ({ cartCount = getStoredCartCount() }) => {
           }}
         >
           {tab.key === 'cart' ? (
-            <Badge count={cartCount} size="small">
+            <Badge count={displayedCartCount} size="small">
               {bottomIconMap[tab.icon]}
             </Badge>
           ) : (

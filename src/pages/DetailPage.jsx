@@ -19,7 +19,6 @@ import {
 import { App } from 'antd';
 
 import { ServiceContext } from '../contexts/ServiceContext';
-import { STORAGE_KEYS } from '../constants/storageKeys';
 import '../styles/detail.css';
 
 const formatPrice = price => Number(price || 0).toFixed(price % 1 ? 1 : 0);
@@ -112,26 +111,16 @@ const DetailPage = () => {
       return;
     }
     if (sheetMode === 'cart') {
-      const storedCart = localStorage.getItem(STORAGE_KEYS.cart);
-      let cartList;
-      try {
-        cartList = storedCart ? JSON.parse(storedCart) : [];
-      } catch {
-        cartList = [];
-      }
-      const key = `${good.id}-${selectedSku}`;
-      const existing = cartList.find(item => item.cartKey === key);
-      if (existing) {
-        existing.count = (existing.count || 1) + quantity;
-      } else {
-        cartList.push({ ...good, cartKey: key, sku: selectedSku, count: quantity });
-      }
-      localStorage.setItem(STORAGE_KEYS.cart, JSON.stringify(cartList));
+      services.cart.addItem({ ...good, sku: selectedSku, quantity });
       message.success('已加入购物车');
       closeSheet();
     } else {
       closeSheet();
-      navigate(`/createOrder/${goodId}`);
+      const params = new URLSearchParams({
+        sku: selectedSku,
+        quantity: String(quantity),
+      });
+      navigate(`/createOrder/${goodId}?${params}`);
     }
   };
 

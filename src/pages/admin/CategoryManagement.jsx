@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import './CategoryManagement.css';
 
 function CategoryManagement() {
@@ -14,11 +14,7 @@ function CategoryManagement() {
     status: 1
   });
 
-  useEffect(() => {
-    fetchCategories();
-  }, []);
-
-  const fetchCategories = async () => {
+  const fetchCategories = useCallback(async () => {
     setLoading(true);
     try {
       const response = await fetch('http://localhost:5000/api/admin/categories');
@@ -31,7 +27,11 @@ function CategoryManagement() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    void Promise.resolve().then(fetchCategories);
+  }, [fetchCategories]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

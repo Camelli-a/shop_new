@@ -12,6 +12,7 @@ class UserService {
   login(username, password) {
     if (username === MOCK_USER.username && password === MOCK_USER.password) {
       this.currentUser = {
+        id: MOCK_USER.id,
         username: MOCK_USER.username,
         nickname: MOCK_USER.nickname,
         phone: MOCK_USER.phone,

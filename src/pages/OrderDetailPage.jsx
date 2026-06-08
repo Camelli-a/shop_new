@@ -1,33 +1,111 @@
 import { useContext } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router';
+import {
+  CheckCircleFilled,
+  ClockCircleFilled,
+  EnvironmentOutlined,
+  LeftOutlined,
+} from '@ant-design/icons';
 
-import { ORDER_STATUS_LABEL } from '../constants/orderStatus';
+import { ORDER_STATUS, ORDER_STATUS_LABEL } from '../constants/orderStatus';
 import { ServiceContext } from '../contexts/ServiceContext';
+import '../styles/transaction.css';
 
 const OrderDetailPage = () => {
   const { orderId } = useParams();
   const services = useContext(ServiceContext);
   const navigate = useNavigate();
+  const order = services.order.getOrderById(orderId);
 
-  const parsedOrderId = parseInt(orderId, 10);
-  const order = services.order.getOrderById(parsedOrderId);
   if (!order) {
-    alert('订单不存在');
-    navigate('/home');
-    return;
+    return (
+      <main className="transaction-page">
+        <section className="phone-app transaction-empty-page">
+          <h1>订单不存在</h1>
+          <button type="button" className="primary-action compact" onClick={() => navigate('/orderList')}>返回订单列表</button>
+        </section>
+      </main>
+    );
   }
 
+  const isUnpaid = order.status === ORDER_STATUS.unpaid;
+
   return (
-    <div>
-      <h1>OrderDetail Page</h1>
-      <p>orderId: {orderId}</p>
-      <p>orderNo: {order.orderNo}</p>
-      <p>createTime: {order.createTime}</p>
-      <p>price: {order.price}</p>
-      <p>goodId: {order.goodId}</p>
-      <p>status: {ORDER_STATUS_LABEL[order.status] || '未知状态'}</p>
-    </div>
+    <main className={`transaction-page${isUnpaid ? ' has-action-bar' : ''}`}>
+      <section className="phone-app">
+        <header className="transaction-navbar detail-nav">
+          <button type="button" onClick={() => navigate(-1)} aria-label="返回">
+            <LeftOutlined />
+          </button>
+          <h1>订单详情</h1>
+          <span />
+        </header>
+
+        <section className={`order-status-hero status-${order.status}`}>
+          {isUnpaid ? <ClockCircleFilled /> : <CheckCircleFilled />}
+          <div>
+            <strong>{ORDER_STATUS_LABEL[order.status] || '订单处理中'}</strong>
+            <span>{isUnpaid ? '请尽快完成支付，订单才会开始处理' : '感谢购买，我们会及时处理你的订单'}</span>
+          </div>
+        </section>
+
+        <section className="transaction-section order-address-card">
+          <EnvironmentOutlined />
+          <div>
+            <strong>{order.receiver || '未填写收货人'} <span>{order.receiverPhone}</span></strong>
+            <p>{order.address || '暂无收货地址'}</p>
+          </div>
+        </section>
+
+        <section className="transaction-section">
+          <div className="section-title">
+            <h2>商品信息</h2>
+            <span>{order.items.length} 种</span>
+          </div>
+          <div className="order-product-list">
+            {order.items.map(item => (
+              <div className="order-product-row" key={`${item.goodId}-${item.sku}`}>
+                <button
+                  type="button"
+                  className="order-product-image"
+                  onClick={() => item.goodId && navigate(`/detail/${item.goodId}`)}
+                >
+                  {item.img ? <img src={item.img} alt={item.name} /> : <strong>{item.name.slice(0, 2)}</strong>}
+                </button>
+                <div className="order-product-info">
+                  <strong>{item.name}</strong>
+                  <span>{item.sku} · x{item.quantity}</span>
+                </div>
+                <b>¥{Number(item.subtotal).toFixed(2)}</b>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="transaction-section detail-info-list">
+          <div><span>订单编号</span><strong>{order.orderNo}</strong></div>
+          <div><span>创建时间</span><strong>{order.createTime}</strong></div>
+          {order.payMethod && <div><span>支付方式</span><strong>{order.payMethod}</strong></div>}
+          {order.payTime && <div><span>支付时间</span><strong>{order.payTime}</strong></div>}
+        </section>
+
+        <section className="transaction-section price-summary">
+          <div><span>商品金额</span><strong>¥{Number(order.totalAmount).toFixed(2)}</strong></div>
+          <div><span>运费</span><strong className="free-shipping">免运费</strong></div>
+          <div className="price-summary-total"><span>订单金额</span><strong>¥{Number(order.totalAmount).toFixed(2)}</strong></div>
+        </section>
+      </section>
+
+      {isUnpaid && (
+        <div className="transaction-action-bar">
+          <div><span>待支付</span><strong>¥{Number(order.totalAmount).toFixed(2)}</strong></div>
+          <button type="button" className="primary-action" onClick={() => navigate(`/pay/${order.id}`)}>
+            立即支付
+          </button>
+        </div>
+      )}
+    </main>
   );
-}
+};
 
 export default OrderDetailPage;
