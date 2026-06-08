@@ -88,7 +88,16 @@ function ProductManagement() {
 
   const handleEdit = (product) => {
     setEditingProduct(product);
-    setFormData(product);
+    setFormData({
+      name: product.name,
+      categoryId: product.categoryId,
+      price: product.price,
+      originalPrice: product.originalPrice,
+      stock: product.stock,
+      img: product.img,
+      description: product.description,
+      status: product.status,
+    });
     setShowModal(true);
   };
 

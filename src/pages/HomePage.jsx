@@ -2,6 +2,7 @@ import {
   startTransition,
   useContext,
   useDeferredValue,
+  useEffect,
   useState,
 } from 'react';
 import { useNavigate } from 'react-router';
@@ -49,10 +50,47 @@ const HomePage = () => {
   const [searchText, setSearchText] = useState('');
   const [activeCategory, setActiveCategory] = useState('all');
   const [activeTopChannel, setActiveTopChannel] = useState('all');
-  const [cartCount, setCartCount] = useState(() => services.cart.getCartCount());
+  const [goods, setGoods] = useState([]);
+  const [displayCategories, setDisplayCategories] = useState(categoryList);
+  const [cartCount, setCartCount] = useState(0);
+  const [loadError, setLoadError] = useState('');
   const deferredSearchText = useDeferredValue(searchText.trim().toLowerCase());
 
-  const goods = services.good.getGoodList().map(enrichGood);
+  useEffect(() => {
+    let active = true;
+    void Promise.resolve().then(async () => {
+      try {
+        const [goodList, count, backendCategories] = await Promise.all([
+          services.good.getGoodList(),
+          services.cart.getCartCount(),
+          services.category.getCategoryList(),
+        ]);
+        if (active) {
+          setGoods(goodList.map(enrichGood));
+          setCartCount(count);
+          const configMap = Object.fromEntries(categoryList.map(item => [item.key, item]));
+          const businessCategories = backendCategories.map((item, index) => ({
+            key: item.id,
+            label: item.name,
+            iconSrc: item.icon || configMap[item.id]?.iconSrc || '/assets/home/icons/recommend.svg',
+            tone: configMap[item.id]?.tone || ['red', 'blue', 'green', 'yellow'][index % 4],
+          }));
+          setDisplayCategories([
+            configMap.all,
+            ...businessCategories,
+            ...categoryList.filter(item => ['shop', 'coupon', 'nearby'].includes(item.key)),
+          ].filter(Boolean));
+          setLoadError('');
+        }
+      } catch (error) {
+        if (active) setLoadError(error.message);
+      }
+    });
+    return () => {
+      active = false;
+    };
+  }, [services]);
+
   const filteredGoods = goods.filter(good => {
     const categoryMatched =
       activeCategory === 'all' || good.categoryId === activeCategory;
@@ -96,11 +134,15 @@ const HomePage = () => {
     message.info('该频道为商城运营入口，后续可接入专题页');
   };
 
-  const handleAddToCart = (event, good) => {
+  const handleAddToCart = async (event, good) => {
     event.stopPropagation();
-    services.cart.addItem({ ...good, sku: '默认规格', quantity: 1 });
-    setCartCount(services.cart.getCartCount());
-    message.success('已加入购物车');
+    try {
+      const cart = await services.cart.addItem({ ...good, sku: '默认规格', quantity: 1 });
+      setCartCount(cart.reduce((total, item) => total + item.quantity, 0));
+      message.success('已加入购物车');
+    } catch (error) {
+      message.error(error.message);
+    }
   };
 
   const goToDetail = id => {
@@ -108,7 +150,7 @@ const HomePage = () => {
   };
 
   const activeCategoryLabel =
-    categoryList.find(item => item.key === activeCategory)?.label || '推荐';
+    displayCategories.find(item => item.key === activeCategory)?.label || '推荐';
 
   return (
     <main className="mall-home">
@@ -150,7 +192,7 @@ const HomePage = () => {
         </header>
 
         <div className="category-pills" aria-label="分类筛选">
-          {categoryList.slice(0, 7).map(category => (
+          {displayCategories.slice(0, 7).map(category => (
             <button
               className={activeCategory === category.key ? 'is-active' : ''}
               key={category.key}
@@ -163,7 +205,7 @@ const HomePage = () => {
         </div>
 
         <section className="quick-grid" aria-label="商品频道">
-          {categoryList.map(category => (
+          {displayCategories.map(category => (
             <button
               className={`quick-entry tone-${category.tone}${activeCategory === category.key ? ' is-active' : ''}`}
               key={category.key}
@@ -235,7 +277,9 @@ const HomePage = () => {
             <span>{filteredGoods.length} 件</span>
           </div>
 
-          {filteredGoods.length > 0 ? (
+          {loadError ? (
+            <Empty className="home-empty" description={loadError} />
+          ) : filteredGoods.length > 0 ? (
             <div className="product-grid">
               {filteredGoods.map(good => (
                 <article

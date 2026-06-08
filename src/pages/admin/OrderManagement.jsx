@@ -120,8 +120,8 @@ function OrderManagement() {
                     <div>{order.userName}</div>
                     <div className="small-text">{order.userPhone}</div>
                   </td>
-                  <td>¥{order.totalAmount || order.price}</td>
-                  <td>{order.quantity || 1}</td>
+                  <td>¥{order.totalAmount}</td>
+                  <td>{order.quantity}</td>
                   <td>
                     <span className={`status-badge ${getStatusClass(order.status)}`}>
                       {getStatusText(order.status)}
@@ -222,21 +222,15 @@ function OrderManagement() {
 
               <div className="detail-section">
                 <h4>商品信息</h4>
-                <div className="detail-row">
-                  <span className="label">商品名称：</span>
-                  <span>{showDetail.goodName}</span>
-                </div>
-                <div className="detail-row">
-                  <span className="label">单价：</span>
-                  <span>¥{showDetail.price}</span>
-                </div>
-                <div className="detail-row">
-                  <span className="label">数量：</span>
-                  <span>{showDetail.quantity || 1}</span>
-                </div>
+                {showDetail.items?.map((item) => (
+                  <div className="detail-row" key={`${item.goodId}-${item.sku}`}>
+                    <span className="label">{item.name}：</span>
+                    <span>{item.sku} × {item.quantity}，¥{item.subtotal}</span>
+                  </div>
+                ))}
                 <div className="detail-row">
                   <span className="label">订单金额：</span>
-                  <span className="price">¥{showDetail.totalAmount || showDetail.price}</span>
+                  <span className="price">¥{showDetail.totalAmount}</span>
                 </div>
               </div>
 

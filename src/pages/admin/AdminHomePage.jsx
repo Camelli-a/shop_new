@@ -95,7 +95,7 @@ function AdminHomePage() {
                     <div>{order.userName}</div>
                     <div className="small-text">{order.userPhone}</div>
                   </td>
-                  <td>¥{order.price}</td>
+                  <td>¥{order.totalAmount}</td>
                   <td>{order.quantity}</td>
                   <td>
                     <span className={`status-badge status-${order.status}`}>

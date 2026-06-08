@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import {
   AppstoreOutlined,
@@ -37,7 +37,24 @@ const BottomNav = ({ cartCount }) => {
   const location = useLocation();
   const services = useContext(ServiceContext);
   const activeKey = getActiveKey(location.pathname);
-  const displayedCartCount = cartCount ?? services.cart.getCartCount();
+  const [storedCartCount, setStoredCartCount] = useState(0);
+  const displayedCartCount = cartCount ?? storedCartCount;
+
+  useEffect(() => {
+    if (cartCount !== undefined) return undefined;
+    let active = true;
+    void Promise.resolve().then(async () => {
+      try {
+        const count = await services.cart.getCartCount();
+        if (active) setStoredCartCount(count);
+      } catch {
+        if (active) setStoredCartCount(0);
+      }
+    });
+    return () => {
+      active = false;
+    };
+  }, [cartCount, services]);
 
   return (
     <nav className="bottom-nav" aria-label="前台底部导航">

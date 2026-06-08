@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router';
 import { FileTextOutlined, RightOutlined } from '@ant-design/icons';
 import { Empty } from 'antd';
@@ -22,7 +22,26 @@ const OrderListPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const activeStatus = searchParams.get('status') ?? 'all';
   const status = activeStatus === 'all' ? undefined : Number(activeStatus);
-  const orders = services.order.getOrderList(user?.id || 1, status);
+  const [orders, setOrders] = useState([]);
+  const [loadError, setLoadError] = useState('');
+
+  useEffect(() => {
+    let active = true;
+    void Promise.resolve().then(async () => {
+      try {
+        const list = await services.order.getOrderList(user?.id || 1, status);
+        if (active) {
+          setOrders(list);
+          setLoadError('');
+        }
+      } catch (error) {
+        if (active) setLoadError(error.message);
+      }
+    });
+    return () => {
+      active = false;
+    };
+  }, [services, status, user?.id]);
 
   return (
     <main className="transaction-page has-bottom-nav">
@@ -53,7 +72,9 @@ const OrderListPage = () => {
           ))}
         </div>
 
-        {orders.length === 0 ? (
+        {loadError ? (
+          <div className="transaction-empty"><strong>{loadError}</strong></div>
+        ) : orders.length === 0 ? (
           <div className="transaction-empty">
             <Empty
               image={<FileTextOutlined className="transaction-empty-icon" />}
