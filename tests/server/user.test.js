@@ -2,15 +2,13 @@ import { describe, it, expect, beforeAll } from 'vitest';
 import express from 'express';
 import request from 'supertest';
 
-// 动态导入 CommonJS 模块
 let app;
 
 beforeAll(async () => {
   app = express();
   app.use(express.json());
-  // supertest 需要 require 方式加载 CJS 路由
-  const userRouter = (await import('../../server/routes/user.js')).default
-    ?? require('../../server/routes/user.js');
+  const userModule = await import('../../server/routes/user.js');
+  const userRouter = userModule.default ?? userModule;
   app.use(userRouter);
 });
 

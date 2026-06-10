@@ -2,8 +2,6 @@ const express = require('express');
 const cors = require('cors');
 const { database, nextId, saveDatabase, DB_PATH } = require('./data/store');
 
-const Mock = require('mockjs');
-
 const app = express();
 const PORT = Number(process.env.PORT || 5000);
 
@@ -30,96 +28,6 @@ const orderSummary = order => ({
 // ===== 前台用户模块路由 =====
 const userRouter = require('./routes/user');
 app.use(userRouter);
-
-const Random = Mock.Random;
-
-const mockUsers = Mock.mock({
-  'list|3': [
-    {
-      'id|+1': 1,
-      'username': /admin|manager|user/,
-      'password': '123456',
-      'role': '@pick(["admin", "manager", "user"])',
-      'name': '@cname',
-      'avatar': "@image('100x100', '#50B347', '#FFF', 'png', 'A')",
-      'email': '@email',
-      'phone': /^1[3-9]\d{9}$/,
-      'createTime': '@datetime',
-      'status': 1
-    }
-  ]
-}).list;
-
-const mockCategories = Mock.mock({
-  'list|6': [
-    {
-      'id|+1': 1,
-      'name': '@pick(["美妆", "母婴", "图书", "运动", "数码", "家居"])',
-      'icon': "@image('50x50', '#4A90E2', '#FFF', 'png', 'I')",
-      'sort|+1': 1,
-      'status': 1,
-      'createTime': '@datetime'
-    }
-  ]
-}).list;
-
-const mockProducts = Mock.mock({
-  'list|20': [
-    {
-      'id|+1': 1,
-      'name': '@ctitle(5, 20)',
-      'categoryId': '@integer(1, 6)',
-      'categoryName': '@pick(["美妆", "母婴", "图书", "运动", "数码", "家居"])',
-      'price': '@integer(10, 10000)',
-      'originalPrice': '@integer(20, 15000)',
-      'stock': '@integer(10, 500)',
-      'sales': '@integer(0, 1000)',
-      'img': "@image('200x200', '#E8E8E8', '#FFF', 'png', '商品')",
-      'description': '@cparagraph(1, 3)',
-      'status': '@pick([0, 1])',
-      'createTime': '@datetime',
-      'updateTime': '@datetime'
-    }
-  ]
-}).list;
-
-const mockOrders = Mock.mock({
-  'list|15': [
-    {
-      'id|+1': 1,
-      'orderNo': /\d{14}/,
-      'userId': '@integer(1, 100)',
-      'userName': '@cname',
-      'userPhone': /^1[3-9]\d{9}$/,
-      'goodId': '@integer(1, 20)',
-      'goodName': '@ctitle(5, 15)',
-      'price': '@integer(100, 5000)',
-      'quantity': '@integer(1, 5)',
-      'totalAmount': '@integer(100, 10000)',
-      'status|+1': 0,
-      'payMethod': '@pick(["支付宝", "微信", "银行卡"])',
-      'payTime': '@datetime',
-      'createTime': '@datetime',
-      'shipTime': '@datetime',
-      'receiveTime': '@datetime',
-      'address': '@county(true)',
-      'receiver': '@cname',
-      'receiverPhone': /^1[3-9]\d{9}$/
-    }
-  ]
-}).list;
-
-const mockRoles = Mock.mock({
-  'list|3': [
-    {
-      'id|+1': 1,
-      'name': '@pick(["超级管理员", "商品管理员", "订单管理员"])',
-      'description': '@cparagraph(1, 2)',
-      'permissions': ['dashboard', 'goods', 'categories', 'orders', 'users', 'roles'],
-      'createTime': '@datetime'
-    }
-  ]
-}).list;
 
 app.post('/api/admin/login', (req, res) => {
   const { username, password } = req.body;

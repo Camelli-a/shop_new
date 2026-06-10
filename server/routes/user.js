@@ -60,6 +60,7 @@ const mockFrontOrders = Mock.mock({
 
 // ===== 辅助函数 =====
 function safeUser(user) {
+  // eslint-disable-next-line
   const { password, ...rest } = user;
   return rest;
 }
