@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate, useLocation, Navigate } from 'react-router';
 import { Form, Input, Button } from 'antd';
 import { useAuth } from '../contexts/useAuth';
-import { LogoutOutlined } from '@ant-design/icons';
+import { LeftOutlined } from '@ant-design/icons';
 import '../styles/login.css';
 
 const LoginPage = () => {
@@ -10,20 +10,26 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [loginError, setLoginError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   // If already authenticated, redirect to /home immediately
   if (isAuthenticated) {
     return <Navigate to="/home" replace />;
   }
 
-  const onFinish = (values) => {
+  const onFinish = async (values) => {
     setLoginError('');
-    const result = login(values.username, values.password);
+    setLoading(true);
+
+    const result = await login(values.username, values.password);
+
+    setLoading(false);
+
     if (result.success) {
       const from = location.state?.from?.pathname || '/home';
       navigate(from, { replace: true });
     } else {
-      setLoginError('用户名或密码错误');
+      setLoginError(result.error || '用户名或密码错误');
     }
   };
 
@@ -39,13 +45,12 @@ const LoginPage = () => {
     <div className="login-page">
       <div className="login-container">
         <div className="login-header">
-          <Button 
-            type="button" 
-            className="login-back-btn" 
-            onClick={handleBack} 
-            icon={<LogoutOutlined />}
-          >
-          </Button>
+          <Button
+            type="button"
+            className="login-back-btn"
+            onClick={handleBack}
+            icon={<LeftOutlined />}
+          />
           <h2 className="login-title">用户登录</h2>
         </div>
         {loginError && <div className="login-error">{loginError}</div>}
@@ -96,7 +101,13 @@ const LoginPage = () => {
           </Form.Item>
 
           <Form.Item>
-            <Button type="primary" htmlType="submit" block className="login-btn">
+            <Button
+              type="primary"
+              htmlType="submit"
+              block
+              className="login-btn"
+              loading={loading}
+            >
               登录
             </Button>
           </Form.Item>

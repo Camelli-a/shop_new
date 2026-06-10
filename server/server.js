@@ -8,6 +8,7 @@ const PORT = Number(process.env.PORT || 5000);
 app.use(cors());
 app.use(express.json());
 
+<<<<<<< Updated upstream
 const ok = (res, data, message = '获取成功') => res.json({ code: 200, message, data });
 const fail = (res, code, message) => res.status(code).json({ code, message, data: null });
 const numberValue = value => Number(value || 0);
@@ -25,6 +26,9 @@ const orderSummary = order => ({
   goodName: order.items[0]?.name || '',
   price: order.items[0]?.unitPrice || 0,
 });
+=======
+// ===== 前台用户模块路由 =====
+>>>>>>> Stashed changes
 const userRouter = require('./routes/user');
 app.use(userRouter);
 

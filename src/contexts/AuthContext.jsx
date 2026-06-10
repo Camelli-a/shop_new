@@ -8,17 +8,8 @@ const AuthProvider = ({ children }) => {
 
   const isAuthenticated = user !== null;
 
-  const login = (username, password) => {
-    const result = userService.login(username, password);
-    if (result) {
-      setUser(result);
-      return { success: true };
-    }
-    return { success: false, error: '用户名或密码错误' };
-  };
-
-  const register = (username, password, options = {}) => {
-    const result = userService.register(username, password, options);
+  const login = async (username, password) => {
+    const result = await userService.login(username, password);
     if (result.success) {
       setUser(result.user);
       return { success: true };
@@ -26,14 +17,27 @@ const AuthProvider = ({ children }) => {
     return { success: false, error: result.error };
   };
 
-  const logout = () => {
-    userService.logout();
+  const register = async (username, password, options = {}) => {
+    const result = await userService.register(username, password, options);
+    if (result.success) {
+      setUser(result.user);
+      return { success: true };
+    }
+    return { success: false, error: result.error };
+  };
+
+  const logout = async () => {
+    await userService.logout();
     setUser(null);
   };
 
-  const updateProfile = (updates) => {
-    const updatedUser = userService.updateProfile(updates);
-    setUser(updatedUser);
+  const updateProfile = async (updates) => {
+    const result = await userService.updateProfile(updates);
+    if (result.success) {
+      setUser(result.user);
+      return { success: true };
+    }
+    return { success: false, error: result.error };
   };
 
   const value = {

@@ -1,3 +1,5 @@
+/* RegisterPage styles — mirrors login.css styling */
+
 .register-page {
   display: flex;
   flex-direction: column;

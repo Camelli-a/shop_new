@@ -4,6 +4,7 @@ const Mock = require('mockjs');
 const router = express.Router();
 const Random = Mock.Random;
 
+// ===== 前台用户模块 Mock 数据 =====
 const mockFrontUsers = Mock.mock({
   'list|5': [
     {
@@ -20,6 +21,7 @@ const mockFrontUsers = Mock.mock({
   ],
 }).list;
 
+// 预置一个默认用户，方便测试
 mockFrontUsers.unshift({
   id: 1,
   username: 'admin',
@@ -32,6 +34,7 @@ mockFrontUsers.unshift({
   status: 1,
 });
 
+// ===== 前台用户订单 Mock 数据 =====
 const mockFrontOrders = Mock.mock({
   'list|10': [
     {
@@ -55,12 +58,13 @@ const mockFrontOrders = Mock.mock({
   ],
 }).list;
 
+// ===== 辅助函数 =====
 function safeUser(user) {
-  // eslint-disable-next-line no-unused-vars
   const { password, ...rest } = user;
   return rest;
 }
 
+// ===== 前台用户登录 =====
 router.post('/api/user/login', (req, res) => {
   const { username, password } = req.body;
   const user = mockFrontUsers.find(
@@ -85,6 +89,7 @@ router.post('/api/user/login', (req, res) => {
   }
 });
 
+// ===== 前台用户注册 =====
 router.post('/api/user/register', (req, res) => {
   const { username, password, nickname, phone } = req.body;
 
@@ -164,6 +169,7 @@ router.post('/api/user/register', (req, res) => {
   });
 });
 
+// ===== 获取当前用户信息 =====
 router.get('/api/user/profile', (req, res) => {
   // 简化鉴权：从 header 中取 userId
   const userId = parseInt(req.headers['x-user-id']) || 1;
@@ -219,6 +225,7 @@ router.put('/api/user/profile', (req, res) => {
   });
 });
 
+// ===== 退出登录 =====
 router.post('/api/user/logout', (req, res) => {
   res.json({
     code: 200,
@@ -227,6 +234,7 @@ router.post('/api/user/logout', (req, res) => {
   });
 });
 
+// ===== 获取我的订单列表 =====
 router.get('/api/user/orders', (req, res) => {
   const userId = parseInt(req.headers['x-user-id']) || 1;
   const { status, page = 1, pageSize = 10 } = req.query;
@@ -254,6 +262,7 @@ router.get('/api/user/orders', (req, res) => {
   });
 });
 
+// ===== 获取订单详情 =====
 router.get('/api/user/orders/:id', (req, res) => {
   const id = parseInt(req.params.id);
   const order = mockFrontOrders.find((o) => o.id === id);

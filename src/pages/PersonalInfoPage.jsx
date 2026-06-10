@@ -10,6 +10,7 @@ const PersonalInfoPage = () => {
   const navigate = useNavigate();
   const [nickname, setNickname] = useState(user?.nickname || '');
   const [nicknameError, setNicknameError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleBack = () => {
     navigate('/profile');
@@ -17,13 +18,12 @@ const PersonalInfoPage = () => {
 
   const handleNicknameChange = (e) => {
     setNickname(e.target.value);
-    // Clear error when user starts typing
     if (nicknameError) {
       setNicknameError('');
     }
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     // Validate nickname
     if (!nickname || nickname.length === 0) {
       setNicknameError('请输入昵称');
@@ -34,11 +34,14 @@ const PersonalInfoPage = () => {
       return;
     }
 
-    try {
-      updateProfile({ nickname });
+    setLoading(true);
+    const result = await updateProfile({ nickname });
+    setLoading(false);
+
+    if (result.success) {
       message.success('保存成功', 2);
-    } catch {
-      message.error('保存失败，请重试', 2);
+    } else {
+      message.error(result.error || '保存失败，请重试', 2);
     }
   };
 
@@ -103,6 +106,7 @@ const PersonalInfoPage = () => {
           type="primary"
           className="personal-info-save-btn"
           onClick={handleSave}
+          loading={loading}
           block
         >
           保存

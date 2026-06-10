@@ -23,8 +23,8 @@ const ProfilePage = () => {
       title: '确定要退出登录吗？',
       okText: "确定",
       cancelText: "取消",
-      onOk: () => {
-        logout();
+      onOk: async () => {
+        await logout();
         navigate('/login');
       },
     });
