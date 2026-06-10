@@ -100,6 +100,13 @@ const LoginPage = () => {
               登录
             </Button>
           </Form.Item>
+
+          <div className="login-footer">
+            <span>还没有账号？</span>
+            <Button type="link" onClick={() => navigate('/register')}>
+              去注册
+            </Button>
+          </div>
         </Form>
       </div>
     </div>

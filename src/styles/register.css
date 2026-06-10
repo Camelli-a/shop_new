@@ -1,6 +1,4 @@
-/* LoginPage styles — uses tokens.css CSS variables */
-
-.login-page {
+.register-page {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -17,14 +15,18 @@
   color: var(--mall-text);
 }
 
-.login-header {
+.register-container {
+  width: 100%;
+}
+
+.register-header {
   display: flex;
   align-items: center;
   gap: 12px;
   margin-bottom: 24px;
 }
 
-.login-back-btn {
+.register-back-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -40,28 +42,12 @@
   transition: background 150ms ease, transform 150ms ease;
 }
 
-.login-back-btn:hover {
+.register-back-btn:hover {
   background: rgba(255, 255, 255, 1);
   transform: translateY(-1px);
 }
 
-/* Card container */
-.login-card {
-  width: 100%;
-  padding: 32px 24px;
-  border-radius: 18px;
-  border: 1px solid var(--glass-border);
-  background: var(--mall-card);
-  box-shadow: var(--mall-shadow);
-}
-
-/* Logo / title area */
-.login-header {
-  text-align: center;
-  margin-bottom: 28px;
-}
-
-.login-header h1 {
+.register-title {
   margin: 0;
   font-size: 24px;
   font-weight: 900;
@@ -69,27 +55,21 @@
   letter-spacing: -0.02em;
 }
 
-.login-header p {
-  margin: 8px 0 0;
-  font-size: 14px;
-  color: var(--mall-muted);
-}
-
 /* Form inputs */
-.login-form .ant-input,
-.login-form .ant-input-password,
-.login-form .ant-input-affix-wrapper {
+.register-page .ant-input,
+.register-page .ant-input-password,
+.register-page .ant-input-affix-wrapper {
   min-height: 44px;
   border-radius: 10px;
   font-size: 15px;
 }
 
-.login-form .ant-form-item {
-  margin-bottom: 18px;
+.register-page .ant-form-item {
+  margin-bottom: 16px;
 }
 
-/* Login button */
-.login-btn {
+/* Register button */
+.register-btn {
   width: 100%;
   min-height: 44px;
   border: 0;
@@ -102,19 +82,19 @@
   transition: opacity 150ms ease, transform 150ms ease;
 }
 
-.login-btn:hover,
-.login-btn:focus {
+.register-btn:hover,
+.register-btn:focus {
   background: var(--mall-red) !important;
   color: #fff !important;
   opacity: 0.9;
 }
 
-.login-btn:active {
+.register-btn:active {
   transform: scale(0.97);
 }
 
 /* Error messages */
-.login-error {
+.register-error {
   margin-bottom: 16px;
   padding: 10px 12px;
   border-radius: 8px;
@@ -125,32 +105,26 @@
   text-align: center;
 }
 
-.login-form .ant-form-item-explain-error {
+.register-page .ant-form-item-explain-error {
   color: var(--mall-red);
   font-size: 12px;
 }
 
-/* Responsive: small screens ≤360px */
-@media (max-width: 360px) {
-  .login-page {
-    padding: 0 8px;
-  }
-
-  .login-card {
-    padding: 24px 16px;
-    border-radius: 14px;
-  }
-}
-
-
-/* Footer link to register */
-.login-footer {
+/* Footer link */
+.register-footer {
   text-align: center;
   font-size: 14px;
   color: var(--mall-muted);
 }
 
-.login-footer .ant-btn-link {
+.register-footer .ant-btn-link {
   padding: 0 4px;
   font-size: 14px;
+}
+
+/* Responsive */
+@media (max-width: 360px) {
+  .register-page {
+    padding: 0 8px;
+  }
 }

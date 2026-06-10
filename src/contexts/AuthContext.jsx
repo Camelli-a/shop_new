@@ -17,6 +17,15 @@ const AuthProvider = ({ children }) => {
     return { success: false, error: '用户名或密码错误' };
   };
 
+  const register = (username, password, options = {}) => {
+    const result = userService.register(username, password, options);
+    if (result.success) {
+      setUser(result.user);
+      return { success: true };
+    }
+    return { success: false, error: result.error };
+  };
+
   const logout = () => {
     userService.logout();
     setUser(null);
@@ -31,6 +40,7 @@ const AuthProvider = ({ children }) => {
     user,
     isAuthenticated,
     login,
+    register,
     logout,
     updateProfile,
   };
