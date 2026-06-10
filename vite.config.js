@@ -10,14 +10,10 @@ export default defineConfig({
   ],
   server: {
     proxy: {
-<<<<<<< Updated upstream
-      '/api': 'http://localhost:5000',
-=======
       '/api': {
         target: 'http://localhost:5000',
         changeOrigin: true,
       },
->>>>>>> Stashed changes
     },
   },
 })

@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const { database, nextId, saveDatabase, DB_PATH } = require('./data/store');
 
+const Mock = require('mockjs');
+
 const app = express();
 const PORT = Number(process.env.PORT || 5000);
 
