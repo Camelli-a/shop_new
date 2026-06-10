@@ -168,7 +168,7 @@ describe('修改个人信息 PUT /api/user/profile', () => {
     const res = await request(app)
       .put('/api/user/profile')
       .set('x-user-id', '1')
-      .send({ nickname: '这个昵称超级长超级长超级长超级长超级长' });
+      .send({ nickname: 'abcdefghijklmnopqrstu' });
 
     expect(res.body.code).toBe(400);
   });

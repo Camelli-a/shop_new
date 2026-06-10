@@ -1,3 +1,4 @@
+import React from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
@@ -54,7 +55,7 @@ describe('PersonalInfoPage', () => {
   it('应显示用户头像', () => {
     renderPage();
 
-    const avatar = screen.getByAlt('用户头像');
+    const avatar = screen.getByAltText('用户头像');
     expect(avatar).toBeInTheDocument();
     expect(avatar).toHaveAttribute('src', '/assets/home/icons/recommend.svg');
   });
@@ -71,7 +72,7 @@ describe('PersonalInfoPage', () => {
 
     const input = screen.getByDisplayValue('京东用户');
     fireEvent.change(input, { target: { value: '' } });
-    fireEvent.click(screen.getByText('保存'));
+    fireEvent.click(screen.getByRole('button', { name: /保\s*存/ }));
 
     expect(screen.getByText('请输入昵称')).toBeInTheDocument();
     expect(mockUpdateProfile).not.toHaveBeenCalled();
@@ -83,7 +84,7 @@ describe('PersonalInfoPage', () => {
 
     const input = screen.getByDisplayValue('京东用户');
     fireEvent.change(input, { target: { value: '新昵称' } });
-    fireEvent.click(screen.getByText('保存'));
+    fireEvent.click(screen.getByRole('button', { name: /保\s*存/ }));
 
     await waitFor(() => {
       expect(mockUpdateProfile).toHaveBeenCalledWith({ nickname: '新昵称' });
@@ -96,7 +97,7 @@ describe('PersonalInfoPage', () => {
 
     const input = screen.getByDisplayValue('京东用户');
     fireEvent.change(input, { target: { value: '新昵称' } });
-    fireEvent.click(screen.getByText('保存'));
+    fireEvent.click(screen.getByRole('button', { name: /保\s*存/ }));
 
     await waitFor(() => {
       expect(mockUpdateProfile).toHaveBeenCalled();

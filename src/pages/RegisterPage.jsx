@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState } from 'react';
 import { useNavigate, Navigate } from 'react-router';
 import { Form, Input, Button, message } from 'antd';
@@ -20,7 +21,7 @@ const RegisterPage = () => {
     setRegisterError('');
     setLoading(true);
 
-    const result = register(values.username, values.password, {
+    const result = await register(values.username, values.password, {
       nickname: values.nickname,
       phone: values.phone,
     });
