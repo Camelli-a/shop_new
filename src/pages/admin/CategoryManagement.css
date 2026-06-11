@@ -5,3 +5,109 @@
   flex-direction: column;
   gap: 20px;
 }
+
+.upload-area {
+  border: 2px dashed #d9d9d9;
+  border-radius: 8px;
+  padding: 40px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: #fafafa;
+}
+
+.upload-area:hover {
+  border-color: #1890ff;
+  background: #e6f7ff;
+}
+
+.upload-area.drag-over {
+  border-color: #1890ff;
+  background: #e6f7ff;
+  transform: scale(1.02);
+}
+
+.upload-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.upload-icon {
+  font-size: 48px;
+}
+
+.upload-placeholder p {
+  margin: 0;
+  color: #595959;
+  font-size: 14px;
+}
+
+.upload-hint {
+  color: #8c8c8c !important;
+  font-size: 12px !important;
+}
+
+.upload-preview {
+  position: relative;
+  display: inline-block;
+}
+
+.preview-image {
+  max-width: 200px;
+  max-height: 150px;
+  object-fit: contain;
+  border-radius: 4px;
+  border: 1px solid #d9d9d9;
+}
+
+.preview-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s;
+  border-radius: 4px;
+}
+
+.upload-preview:hover .preview-overlay {
+  opacity: 1;
+}
+
+.preview-overlay span {
+  color: white;
+  font-size: 14px;
+}
+
+.form-url-input {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.form-url-input span {
+  font-size: 14px;
+  color: #595959;
+  white-space: nowrap;
+}
+
+.form-url-input input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.form-url-input input:focus {
+  outline: none;
+  border-color: #1890ff;
+}

@@ -20,6 +20,7 @@ function ProductManagement() {
     description: '',
     status: 1
   });
+  const [isDragging, setIsDragging] = useState(false);
 
   const fetchCategories = useCallback(async () => {
     try {
@@ -132,6 +133,45 @@ function ProductManagement() {
 
   const getStatusText = (status) => status === 1 ? '在售' : '下架';
   const getStatusClass = (status) => status === 1 ? 'status-active' : 'status-inactive';
+
+  const handleFile = (file) => {
+    if (!file || !file.type.startsWith('image/')) {
+      alert('请上传图片文件');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setFormData(prev => ({ ...prev, img: e.target.result }));
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      handleFile(files[0]);
+    }
+  };
+
+  const handleFileSelect = (e) => {
+    const files = e.target.files;
+    if (files.length > 0) {
+      handleFile(files[0]);
+    }
+  };
 
   return (
     <div className="product-management">
@@ -310,12 +350,38 @@ function ProductManagement() {
               </div>
               <div className="form-group">
                 <label>商品图片</label>
-                <input
-                  type="text"
-                  value={formData.img}
-                  onChange={(e) => setFormData(prev => ({ ...prev, img: e.target.value }))}
-                  placeholder="图片URL"
-                />
+                <div
+                  className={`upload-zone ${isDragging ? 'dragging' : ''} ${formData.img ? 'has-image' : ''}`}
+                  onDragOver={handleDragOver}
+                  onDragLeave={handleDragLeave}
+                  onDrop={handleDrop}
+                >
+                  {formData.img ? (
+                    <div className="upload-preview">
+                      <img src={formData.img} alt="商品预览" className="preview-img" />
+                      <button
+                        type="button"
+                        className="remove-btn"
+                        onClick={() => setFormData(prev => ({ ...prev, img: '' }))}
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="upload-placeholder">
+                      <div className="upload-icon">📷</div>
+                      <div className="upload-text">拖拽图片到这里或点击上传</div>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleFileSelect}
+                        className="file-input"
+                        id="file-input"
+                      />
+                      <label htmlFor="file-input" className="upload-btn">选择图片</label>
+                    </div>
+                  )}
+                </div>
               </div>
               <div className="form-group">
                 <label>商品描述</label>

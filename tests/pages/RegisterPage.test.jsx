@@ -1,4 +1,3 @@
-// eslint-disable-next-line
 import React from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
@@ -59,7 +58,7 @@ describe('RegisterPage', () => {
     expect(screen.getByPlaceholderText('请再次输入密码')).toBeInTheDocument();
     expect(screen.getByPlaceholderText('请输入昵称（选填）')).toBeInTheDocument();
     expect(screen.getByPlaceholderText('请输入手机号（选填）')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /注\s*册/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /注册/ })).toBeInTheDocument();
   });
 
   it('应显示"去登录"链接', () => {
@@ -79,7 +78,7 @@ describe('RegisterPage', () => {
   it('提交空表单应显示验证错误', async () => {
     renderRegister();
 
-    fireEvent.click(screen.getByRole('button', { name: /注\s*册/ }));
+    fireEvent.click(screen.getByRole('button', { name: /注册/ }));
 
     await waitFor(() => {
       expect(screen.getByText('请输入用户名')).toBeInTheDocument();
@@ -98,7 +97,7 @@ describe('RegisterPage', () => {
     fireEvent.change(screen.getByPlaceholderText('请再次输入密码'), {
       target: { value: '654321' },
     });
-    fireEvent.click(screen.getByRole('button', { name: /注\s*册/ }));
+    fireEvent.click(screen.getByRole('button', { name: /注册/ }));
 
     await waitFor(() => {
       expect(screen.getByText('两次输入的密码不一致')).toBeInTheDocument();
@@ -118,7 +117,7 @@ describe('RegisterPage', () => {
     fireEvent.change(screen.getByPlaceholderText('请再次输入密码'), {
       target: { value: '123456' },
     });
-    fireEvent.click(screen.getByRole('button', { name: /注\s*册/ }));
+    fireEvent.click(screen.getByRole('button', { name: /注册/ }));
 
     await waitFor(() => {
       expect(mockRegister).toHaveBeenCalledWith('newuser', '123456', {
@@ -142,7 +141,7 @@ describe('RegisterPage', () => {
     fireEvent.change(screen.getByPlaceholderText('请再次输入密码'), {
       target: { value: '123456' },
     });
-    fireEvent.click(screen.getByRole('button', { name: /注\s*册/ }));
+    fireEvent.click(screen.getByRole('button', { name: /注册/ }));
 
     await waitFor(() => {
       expect(screen.getByText('用户名已存在')).toBeInTheDocument();

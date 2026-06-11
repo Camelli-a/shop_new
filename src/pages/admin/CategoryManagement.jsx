@@ -7,6 +7,7 @@ function CategoryManagement() {
   const [showModal, setShowModal] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
+  const [dragOver, setDragOver] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     icon: '',
@@ -32,6 +33,49 @@ function CategoryManagement() {
   useEffect(() => {
     void Promise.resolve().then(fetchCategories);
   }, [fetchCategories]);
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setDragOver(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    setDragOver(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setDragOver(false);
+    
+    const files = Array.from(e.dataTransfer.files);
+    if (files.length > 0) {
+      handleFileSelect(files[0]);
+    }
+  };
+
+  const handleFileInput = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      handleFileSelect(file);
+    }
+  };
+
+  const handleFileSelect = (file) => {
+    if (!file.type.startsWith('image/')) {
+      alert('请选择图片文件');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setFormData(prev => ({
+        ...prev,
+        icon: e.target.result
+      }));
+    };
+    reader.readAsDataURL(file);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -172,12 +216,44 @@ function CategoryManagement() {
               </div>
               <div className="form-group">
                 <label>图标</label>
-                <input
-                  type="text"
-                  value={formData.icon}
-                  onChange={(e) => setFormData(prev => ({ ...prev, icon: e.target.value }))}
-                  placeholder="图标URL"
-                />
+                <div 
+                  className={`upload-area ${dragOver ? 'drag-over' : ''}`}
+                  onDragOver={handleDragOver}
+                  onDragLeave={handleDragLeave}
+                  onDrop={handleDrop}
+                  onClick={() => document.getElementById('file-input').click()}
+                >
+                  {formData.icon ? (
+                    <div className="upload-preview">
+                      <img src={formData.icon} alt="Preview" className="preview-image" />
+                      <div className="preview-overlay">
+                        <span>点击或拖拽更换图片</span>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="upload-placeholder">
+                      <div className="upload-icon">📷</div>
+                      <p>点击或拖拽图片到此处上传</p>
+                      <p className="upload-hint">支持 JPG、PNG、GIF 格式</p>
+                    </div>
+                  )}
+                  <input
+                    id="file-input"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileInput}
+                    style={{ display: 'none' }}
+                  />
+                </div>
+                <div className="form-url-input">
+                  <span>或输入URL：</span>
+                  <input
+                    type="text"
+                    value={formData.icon}
+                    onChange={(e) => setFormData(prev => ({ ...prev, icon: e.target.value }))}
+                    placeholder="图标URL"
+                  />
+                </div>
               </div>
               <div className="form-group">
                 <label>排序</label>

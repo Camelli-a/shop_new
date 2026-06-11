@@ -1,4 +1,3 @@
-// eslint-disable-next-line
 import React from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
@@ -45,7 +44,7 @@ describe('LoginPage', () => {
     expect(screen.getByText('用户登录')).toBeInTheDocument();
     expect(screen.getByPlaceholderText('请输入用户名')).toBeInTheDocument();
     expect(screen.getByPlaceholderText('请输入密码')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /登\s*录/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /登录/ })).toBeInTheDocument();
   });
 
   it('应显示"去注册"链接', () => {
@@ -65,7 +64,7 @@ describe('LoginPage', () => {
   it('提交空表单应显示验证错误', async () => {
     renderLogin();
 
-    fireEvent.click(screen.getByRole('button', { name: /登\s*录/ }));
+    fireEvent.click(screen.getByRole('button', { name: /登录/ }));
 
     await waitFor(() => {
       expect(screen.getByText('请输入用户名')).toBeInTheDocument();
@@ -82,7 +81,7 @@ describe('LoginPage', () => {
     fireEvent.change(screen.getByPlaceholderText('请输入密码'), {
       target: { value: '123456' },
     });
-    fireEvent.click(screen.getByRole('button', { name: /登\s*录/ }));
+    fireEvent.click(screen.getByRole('button', { name: /登录/ }));
 
     await waitFor(() => {
       expect(mockLogin).toHaveBeenCalledWith('admin', '123456');
@@ -100,7 +99,7 @@ describe('LoginPage', () => {
     fireEvent.change(screen.getByPlaceholderText('请输入密码'), {
       target: { value: 'wrong' },
     });
-    fireEvent.click(screen.getByRole('button', { name: /登\s*录/ }));
+    fireEvent.click(screen.getByRole('button', { name: /登录/ }));
 
     await waitFor(() => {
       expect(screen.getByText('用户名或密码错误')).toBeInTheDocument();
