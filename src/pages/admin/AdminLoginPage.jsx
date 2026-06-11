@@ -49,7 +49,6 @@ function AdminLoginPage() {
         <form className="login-form" onSubmit={handleLogin}>
           <div className="form-group">
             <div className="input-wrapper">
-              <span className="input-icon">👤</span>
               <input
                 type="text"
                 placeholder="用户名"
@@ -62,7 +61,6 @@ function AdminLoginPage() {
           
           <div className="form-group">
             <div className="input-wrapper">
-              <span className="input-icon">🔒</span>
               <input
                 type="password"
                 placeholder="密码"
