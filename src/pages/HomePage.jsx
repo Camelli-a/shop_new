@@ -1,8 +1,11 @@
 import {
+  default as React,
   startTransition,
+  useCallback,
   useContext,
   useDeferredValue,
   useEffect,
+  useRef,
   useState,
 } from 'react';
 import { useNavigate } from 'react-router';
@@ -26,10 +29,34 @@ import {
   topChannels,
 } from '../constants/homeConfig';
 
+void React.createElement;
 const formatPrice = price => Number(price || 0).toFixed(price % 1 ? 1 : 0);
 
-const enrichGood = (good, index) => {
-  const fallbackCategory = categoryList[(index % 6) + 1];
+const HOME_PAGE_SIZE = 8;
+
+const normalizeGoodPageResult = (result, fallbackPage) => {
+  if (Array.isArray(result)) {
+    return {
+      list: result,
+      total: result.length,
+      page: fallbackPage,
+      hasMore: false,
+    };
+  }
+
+  const list = Array.isArray(result?.list) ? result.list : [];
+  const total = Number(result?.total ?? list.length);
+
+  return {
+    list,
+    total,
+    page: Number(result?.page ?? fallbackPage),
+    hasMore: Boolean(result?.hasMore),
+  };
+};
+
+const enrichGood = (good, index, offset = 0) => {
+  const fallbackCategory = categoryList[((index + offset) % 6) + 1];
   return {
     categoryName: fallbackCategory.label,
     description: '精选校园生活好物，兼顾价格、品质和日常使用频率。',
@@ -53,20 +80,25 @@ const HomePage = () => {
   const [goods, setGoods] = useState([]);
   const [displayCategories, setDisplayCategories] = useState(categoryList);
   const [cartCount, setCartCount] = useState(0);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [hasMore, setHasMore] = useState(false);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [loadError, setLoadError] = useState('');
+  const [loadMoreError, setLoadMoreError] = useState('');
   const deferredSearchText = useDeferredValue(searchText.trim().toLowerCase());
+  const isLoadingMoreRef = useRef(false);
 
   useEffect(() => {
     let active = true;
     void Promise.resolve().then(async () => {
       try {
-        const [goodList, count, backendCategories] = await Promise.all([
-          services.good.getGoodList(),
+        const [count, backendCategories] = await Promise.all([
           services.cart.getCartCount(),
           services.category.getCategoryList(),
         ]);
         if (active) {
-          setGoods(goodList.map(enrichGood));
           setCartCount(count);
           const configMap = Object.fromEntries(categoryList.map(item => [item.key, item]));
           const businessCategories = backendCategories.map((item, index) => ({
@@ -80,7 +112,6 @@ const HomePage = () => {
             ...businessCategories,
             ...categoryList.filter(item => ['shop', 'coupon', 'nearby'].includes(item.key)),
           ].filter(Boolean));
-          setLoadError('');
         }
       } catch (error) {
         if (active) setLoadError(error.message);
@@ -91,17 +122,108 @@ const HomePage = () => {
     };
   }, [services]);
 
-  const filteredGoods = goods.filter(good => {
-    const categoryMatched =
-      activeCategory === 'all' || good.categoryId === activeCategory;
-    const searchMatched =
-      !deferredSearchText
-      || good.name.toLowerCase().includes(deferredSearchText)
-      || good.categoryName.toLowerCase().includes(deferredSearchText)
-      || good.description.toLowerCase().includes(deferredSearchText);
+  useEffect(() => {
+    let active = true;
+    void Promise.resolve().then(async () => {
+      setIsInitialLoading(true);
+      setLoadError('');
+      setLoadMoreError('');
+      try {
+        const result = normalizeGoodPageResult(await services.good.getGoodPage({
+          page: 1,
+          pageSize: HOME_PAGE_SIZE,
+          keyword: deferredSearchText,
+          categoryId: activeCategory,
+        }), 1);
+        if (!active) return;
 
-    return categoryMatched && searchMatched;
-  });
+        setGoods(result.list.map((good, index) => enrichGood(good, index)));
+        setPage(1);
+        setTotal(result.total);
+        setHasMore(result.hasMore);
+      } catch (error) {
+        if (active) {
+          setGoods([]);
+          setTotal(0);
+          setHasMore(false);
+          setLoadError(error.message);
+        }
+      } finally {
+        if (active) setIsInitialLoading(false);
+      }
+    });
+
+    return () => {
+      active = false;
+    };
+  }, [activeCategory, deferredSearchText, services]);
+
+  const loadNextPage = useCallback(async () => {
+    if (isInitialLoading || isLoadingMoreRef.current || !hasMore) return;
+
+    const nextPage = page + 1;
+    isLoadingMoreRef.current = true;
+    setIsLoadingMore(true);
+    try {
+      const result = normalizeGoodPageResult(await services.good.getGoodPage({
+        page: nextPage,
+        pageSize: HOME_PAGE_SIZE,
+        keyword: deferredSearchText,
+        categoryId: activeCategory,
+      }), nextPage);
+      setGoods(currentGoods => [
+        ...currentGoods,
+        ...result.list.map((good, index) =>
+          enrichGood(good, index, currentGoods.length)
+        ),
+      ]);
+      setPage(result.page);
+      setTotal(result.total);
+      setHasMore(result.hasMore);
+      setLoadError('');
+      setLoadMoreError('');
+    } catch (error) {
+      setLoadMoreError(error.message);
+    } finally {
+      isLoadingMoreRef.current = false;
+      setIsLoadingMore(false);
+    }
+  }, [
+    activeCategory,
+    deferredSearchText,
+    hasMore,
+    isInitialLoading,
+    page,
+    services,
+  ]);
+
+  useEffect(() => {
+    if (!hasMore) return undefined;
+
+    let ticking = false;
+    const handleScroll = () => {
+      if (ticking) return;
+      ticking = true;
+
+      window.requestAnimationFrame(() => {
+        ticking = false;
+        const distanceToBottom =
+          document.documentElement.scrollHeight -
+          (window.scrollY + window.innerHeight);
+
+        if (distanceToBottom <= 120) {
+          void loadNextPage();
+        }
+      });
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [hasMore, loadNextPage]);
+
   const handleCategoryClick = key => {
     if (['shop', 'coupon', 'nearby'].includes(key)) {
       message.info('该频道为首页展示入口，后续可接入独立模块');
@@ -178,7 +300,7 @@ const HomePage = () => {
                 value={searchText}
                 onChange={event => setSearchText(event.target.value)}
                 allowClear
-                bordered={false}
+                variant="borderless"
                 prefix={<SearchOutlined />}
                 placeholder="搜商品 / 店铺 / 优惠"
               />
@@ -274,14 +396,14 @@ const HomePage = () => {
         <section className="product-section" id="home-products" aria-labelledby="product-title">
           <div className="feed-heading">
             <h2 id="product-title">{activeCategoryLabel}好物</h2>
-            <span>{filteredGoods.length} 件</span>
+            <span>{goods.length} / {total} 件</span>
           </div>
 
           {loadError ? (
             <Empty className="home-empty" description={loadError} />
-          ) : filteredGoods.length > 0 ? (
+          ) : goods.length > 0 ? (
             <div className="product-grid">
-              {filteredGoods.map(good => (
+              {goods.map(good => (
                 <article
                   className="product-card"
                   key={good.id}
@@ -335,11 +457,31 @@ const HomePage = () => {
                 </article>
               ))}
             </div>
+          ) : isInitialLoading ? (
+            <div className="home-load-more">商品加载中...</div>
           ) : (
             <Empty
               className="home-empty"
               description="没有找到匹配的商品，换个关键词试试"
             />
+          )}
+
+          {goods.length > 0 && (
+            <div className="home-load-more">
+              {loadMoreError && <span>{loadMoreError}</span>}
+              {hasMore ? (
+                <Button
+                  className="load-more-btn"
+                  htmlType="button"
+                  loading={isLoadingMore}
+                  onClick={loadNextPage}
+                >
+                  {isLoadingMore ? '加载中' : '加载更多'}
+                </Button>
+              ) : (
+                <span>已经到底了</span>
+              )}
+            </div>
           )}
         </section>
       </section>

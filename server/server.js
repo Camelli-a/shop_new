@@ -46,8 +46,40 @@ function createApp(store) {
   });
 
   app.get('/api/products', (req, res) => {
-    const products = database.products.filter(product => Number(product.status) === 1);
-    ok(res, products);
+    const { page, pageSize, keyword = '', categoryId = '' } = req.query;
+    const normalizedKeyword = String(keyword).trim().toLowerCase();
+    const hasPagination = page !== undefined || pageSize !== undefined;
+    let products = database.products.filter(product => Number(product.status) === 1);
+
+    if (categoryId && categoryId !== 'all') {
+      products = products.filter(product => product.categoryId === categoryId);
+    }
+    if (normalizedKeyword) {
+      products = products.filter(product => {
+        const text = [
+          product.name,
+          product.categoryName,
+          product.description,
+        ].filter(Boolean).join(' ').toLowerCase();
+        return text.includes(normalizedKeyword);
+      });
+    }
+
+    if (!hasPagination) return ok(res, products);
+
+    const currentPage = Math.max(1, Number(page) || 1);
+    const currentPageSize = Math.max(1, Math.min(50, Number(pageSize) || 10));
+    const total = products.length;
+    const start = (currentPage - 1) * currentPageSize;
+    const list = products.slice(start, start + currentPageSize);
+
+    return ok(res, {
+      list,
+      total,
+      page: currentPage,
+      pageSize: currentPageSize,
+      hasMore: start + list.length < total,
+    });
   });
 
   app.get('/api/categories', (req, res) => {

@@ -15,3 +15,17 @@ if (!window.matchMedia) {
     }),
   });
 }
+
+if (!window.requestAnimationFrame) {
+  Object.defineProperty(window, 'requestAnimationFrame', {
+    writable: true,
+    value: callback => setTimeout(callback, 0),
+  });
+}
+
+if (!window.cancelAnimationFrame) {
+  Object.defineProperty(window, 'cancelAnimationFrame', {
+    writable: true,
+    value: id => clearTimeout(id),
+  });
+}

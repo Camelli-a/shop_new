@@ -702,6 +702,32 @@
   background: #fff;
 }
 
+.home-load-more {
+  display: grid;
+  min-height: 56px;
+  place-items: center;
+  padding: 14px 0 2px;
+  color: #9aa1ad;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.home-load-more .load-more-btn {
+  min-width: 128px;
+  border: 0;
+  border-radius: 999px;
+  color: #fff;
+  background: linear-gradient(135deg, #ff0036, #ff5a00);
+  box-shadow: 0 8px 18px rgba(255, 41, 0, 0.16);
+  font-weight: 900;
+}
+
+.home-load-more .load-more-btn:hover,
+.home-load-more .load-more-btn:focus {
+  color: #fff !important;
+  background: linear-gradient(135deg, #ff0036, #ff5a00) !important;
+}
+
 @keyframes voicePulse {
   0%,
   100% {

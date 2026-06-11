@@ -1,3 +1,4 @@
+import React from 'react';
 import { useContext, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import {
@@ -19,10 +20,10 @@ const tabPathMap = {
 };
 
 const bottomIconMap = {
-  home: <HomeOutlined />,
-  category: <AppstoreOutlined />,
-  cart: <ShoppingCartOutlined />,
-  profile: <UserOutlined />,
+  home: React.createElement(HomeOutlined),
+  category: React.createElement(AppstoreOutlined),
+  cart: React.createElement(ShoppingCartOutlined),
+  profile: React.createElement(UserOutlined),
 };
 
 const getActiveKey = pathname => {

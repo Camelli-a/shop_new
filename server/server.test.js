@@ -59,6 +59,36 @@ describe('API Tests', () => {
       });
     });
 
+    test('GET /api/products should return paged products when page params exist', async () => {
+      const response = await request(app).get('/api/products?page=1&pageSize=4');
+
+      expect(response.status).toBe(200);
+      expect(response.body.code).toBe(200);
+      expect(response.body.data.list.length).toBeLessThanOrEqual(4);
+      expect(response.body.data.total).toBeGreaterThanOrEqual(response.body.data.list.length);
+      expect(response.body.data.page).toBe(1);
+      expect(response.body.data.pageSize).toBe(4);
+      expect(typeof response.body.data.hasMore).toBe('boolean');
+    });
+
+    test('GET /api/products should filter paged products by category and keyword', async () => {
+      const digitalProduct = database.products.find(product =>
+        product.categoryId === 'digital' && Number(product.status) === 1
+      );
+
+      const keyword = digitalProduct.name.slice(0, 4);
+      const response = await request(app).get(
+        `/api/products?page=1&pageSize=8&categoryId=digital&keyword=${encodeURIComponent(keyword)}`
+      );
+
+      expect(response.status).toBe(200);
+      expect(response.body.data.total).toBeGreaterThan(0);
+      response.body.data.list.forEach(product => {
+        expect(product.categoryId).toBe('digital');
+        expect(product.name).toContain(keyword);
+      });
+    });
+
     test('GET /api/products/:id should return product by id', async () => {
       const response = await request(app).get('/api/products/1');
       expect(response.status).toBe(200);
@@ -337,4 +367,3 @@ describe('API Tests', () => {
     });
   });
 });
-
