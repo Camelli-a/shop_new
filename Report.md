@@ -64,8 +64,8 @@ App（根组件，含 <Outlet /> 渲染子路由）
 | OrderListPage | 订单列表，按状态筛选查看订单 |
 | OrderDetailPage | 订单详情页，查看订单详情和物流信息 |
 | CartPage | 购物车页面，管理购物车商品、增减数量、结算 |
-| ProfilePage | 用户个人中心，查看用户信息和订单入口 |
-| PersonalInfoPage | 个人信息编辑页面 |
+| ProfilePage | 个人主页展示、我的订单入口、个人信息入口和退出登录 |
+| PersonalInfoPage | 昵称编辑、校验、调用接口更新用户资料 |
 | AdminLoginPage | 后台管理员登录 |
 | AdminLayout | 后台管理布局，包含侧边栏导航 |
 | AdminHomePage | 后台首页/仪表盘，展示统计数据和最近订单 |
