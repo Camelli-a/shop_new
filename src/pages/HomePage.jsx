@@ -32,7 +32,7 @@ import {
 void React.createElement;
 const formatPrice = price => Number(price || 0).toFixed(price % 1 ? 1 : 0);
 
-const HOME_PAGE_SIZE = 8;
+const HOME_PAGE_SIZE = 4;
 
 const normalizeGoodPageResult = (result, fallbackPage) => {
   if (Array.isArray(result)) {

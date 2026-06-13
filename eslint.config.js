@@ -24,4 +24,23 @@ export default defineConfig([
       globals: globals.node,
     },
   },
+  {
+    files: ['**/*.test.{js,jsx}', 'tests/setup.js'],
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+        describe: 'readonly',
+        it: 'readonly',
+        test: 'readonly',
+        expect: 'readonly',
+        beforeEach: 'readonly',
+        afterEach: 'readonly',
+        vi: 'readonly',
+      },
+    },
+    rules: {
+      'no-unused-vars': ['error', { varsIgnorePattern: '^React$' }],
+    },
+  },
 ])

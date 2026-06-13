@@ -561,7 +561,8 @@ function createApp(store) {
 
   // ===== 前台用户相关 API =====
   const safeUser = (user) => {
-    const { password, ...rest } = user;
+    const rest = { ...user };
+    delete rest.password;
     return rest;
   };
 

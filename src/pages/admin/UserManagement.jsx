@@ -1,9 +1,21 @@
 import { useCallback, useEffect, useState } from 'react';
 import './UserManagement.css';
 
+const ROLE_NAME_TO_KEY = {
+  超级管理员: 'admin',
+  商品管理员: 'manager',
+  订单管理员: 'user'
+};
+
+const DEFAULT_ROLE_OPTIONS = [
+  { value: 'admin', label: '超级管理员' },
+  { value: 'manager', label: '商品管理员' },
+  { value: 'user', label: '订单管理员' }
+];
+
 function UserManagement() {
   const [users, setUsers] = useState([]);
-  const [roles, setRoles] = useState([]);
+  const [roles, setRoles] = useState(DEFAULT_ROLE_OPTIONS);
   const [loading, setLoading] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -38,8 +50,15 @@ function UserManagement() {
     try {
       const response = await fetch('http://localhost:5000/api/admin/roles');
       const result = await response.json();
-      if (result.code === 200) {
-        setRoles(result.data);
+      if (result.code === 200 && Array.isArray(result.data)) {
+        const roleOptions = result.data
+          .map(role => ({
+            value: ROLE_NAME_TO_KEY[role.name] || role.value || role.key || role.name,
+            label: role.name || role.label || role.value
+          }))
+          .filter(role => role.value && role.label);
+
+        setRoles(roleOptions.length > 0 ? roleOptions : DEFAULT_ROLE_OPTIONS);
       }
     } catch (err) {
       console.error('获取角色失败', err);
@@ -329,9 +348,11 @@ function UserManagement() {
                   onChange={handleFormChange}
                   className="form-input"
                 >
-                  <option value="admin">超级管理员</option>
-                  <option value="manager">商品管理员</option>
-                  <option value="user">订单管理员</option>
+                  {roles.map(role => (
+                    <option key={role.value} value={role.value}>
+                      {role.label}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div className="form-group">
