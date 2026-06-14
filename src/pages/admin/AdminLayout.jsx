@@ -1,27 +1,23 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
-import { useAuthAdmin } from '../../contexts/AuthAdminContext';
+import { useAuthAdmin } from '../../contexts/useAuthAdmin';
 import './AdminLayout.css';
 
 function AdminLayout() {
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const { adminUser, logout, hasMenuPermission, refreshPermissions } = useAuthAdmin();
+  const { adminUser, logout, hasMenuPermission } = useAuthAdmin();
 
   // 页面加载时刷新权限
-  useEffect(() => {
-    void Promise.resolve().then(refreshPermissions);
-  }, [refreshPermissions]);
-
-  const menuItems = [
+  const menuItems = useMemo(() => ([
     { path: '/admin/home', name: '首页', icon: '/assets/admin/icons/home.svg', key: 'home' },
     { path: '/admin/products', name: '商品管理', icon: '/assets/admin/icons/products.svg', key: 'products' },
     { path: '/admin/categories', name: '分类管理', icon: '/assets/admin/icons/categories.svg', key: 'categories' },
     { path: '/admin/orders', name: '订单管理', icon: '/assets/admin/icons/orders.svg', key: 'orders' },
     { path: '/admin/users', name: '用户管理', icon: '/assets/admin/icons/users.svg', key: 'users' },
     { path: '/admin/roles', name: '角色管理', icon: '/assets/admin/icons/roles.svg', key: 'roles' },
-  ];
+  ]), []);
 
   // 只显示有权限的菜单
   const visibleMenuItems = useMemo(() => {

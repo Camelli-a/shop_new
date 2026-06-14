@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useAuthAdmin } from '../../contexts/AuthAdminContext';
+import { useAuthAdmin } from '../../contexts/useAuthAdmin';
 import './ForbiddenPage.css';
 
 function ForbiddenPage() {

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuthAdmin } from '../../contexts/AuthAdminContext';
+import { useAuthAdmin } from '../../contexts/useAuthAdmin';
 import './AdminLoginPage.css';
 
 function AdminLoginPage() {
