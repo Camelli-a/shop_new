@@ -140,9 +140,21 @@
   object-fit: cover;
 }
 
+.user-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
 .user-name {
   color: #333;
   font-size: 14px;
+  font-weight: 500;
+}
+
+.user-role {
+  color: #999;
+  font-size: 12px;
 }
 
 .logout-btn {

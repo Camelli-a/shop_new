@@ -75,8 +75,8 @@ describe('HomePage', () => {
       good: {
         getGoodPage: vi.fn(({ page }) => Promise.resolve(
           page === 1
-            ? { list: pageOneGoods, total: 3, page: 1, pageSize: 8, hasMore: true }
-            : { list: pageTwoGoods, total: 3, page: 2, pageSize: 8, hasMore: false }
+            ? { list: pageOneGoods, total: 3, page: 1, pageSize: 4, hasMore: true }
+            : { list: pageTwoGoods, total: 3, page: 2, pageSize: 4, hasMore: false }
         )),
       },
       cart: {
@@ -97,7 +97,7 @@ describe('HomePage', () => {
     expect(screen.getByText('2 / 3 件')).toBeInTheDocument();
     expect(services.good.getGoodPage).toHaveBeenCalledWith({
       page: 1,
-      pageSize: 8,
+      pageSize: 4,
       keyword: '',
       categoryId: 'all',
     });
@@ -114,7 +114,7 @@ describe('HomePage', () => {
     expect(screen.getByText('已经到底了')).toBeInTheDocument();
     expect(services.good.getGoodPage).toHaveBeenLastCalledWith({
       page: 2,
-      pageSize: 8,
+      pageSize: 4,
       keyword: '',
       categoryId: 'all',
     });
@@ -141,7 +141,7 @@ describe('HomePage', () => {
     expect(await screen.findByText('机械键盘')).toBeInTheDocument();
     expect(services.good.getGoodPage).toHaveBeenLastCalledWith({
       page: 2,
-      pageSize: 8,
+      pageSize: 4,
       keyword: '',
       categoryId: 'all',
     });
@@ -158,7 +158,7 @@ describe('HomePage', () => {
     await waitFor(() => {
       expect(services.good.getGoodPage).toHaveBeenLastCalledWith({
         page: 1,
-        pageSize: 8,
+        pageSize: 4,
         keyword: '键盘',
         categoryId: 'all',
       });

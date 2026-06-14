@@ -4,6 +4,7 @@ const cors = require('cors');
 function createApp(store) {
   const { database, nextId, saveDatabase } = store;
   const app = express();
+  const PAYMENT_WINDOW_MS = 15 * 60 * 1000;
   
   app.use(cors());
   app.use(express.json());
@@ -19,17 +20,75 @@ function createApp(store) {
   const productById = id => database.products.find(product => Number(product.id) === Number(id));
   const orderById = id => database.orders.find(order => Number(order.id) === Number(id));
   const itemCount = order => order.items.reduce((total, item) => total + item.quantity, 0);
+  const restoreOrderInventory = order => {
+    if (order.inventoryRestored) return;
+    order.items.forEach(item => {
+      const product = productById(item.goodId);
+      if (!product) return;
+      product.stock = numberValue(product.stock) + numberValue(item.quantity);
+      product.sales = Math.max(0, numberValue(product.sales) - numberValue(item.quantity));
+      product.updateTime = new Date().toISOString();
+    });
+    order.inventoryRestored = true;
+  };
+  const expireOrders = (now = new Date()) => {
+    let changed = false;
+    database.orders.forEach(order => {
+      if (order.status !== 0) return;
+      if (!order.expiresAt) {
+        order.expiresAt = new Date(
+          new Date(order.createTime).getTime() + PAYMENT_WINDOW_MS
+        ).toISOString();
+        changed = true;
+      }
+      if (new Date(order.expiresAt).getTime() > now.getTime()) return;
+      restoreOrderInventory(order);
+      order.status = 4;
+      order.cancelTime = now.toISOString();
+      order.cancelReason = '支付超时，订单已自动取消';
+      changed = true;
+    });
+    if (changed) saveDatabase();
+  };
+  const ensureLogistics = (order, time) => {
+    if (!order.logistics) {
+      order.logistics = {
+        carrier: '顺丰速运',
+        trackingNo: `SF${String(order.orderNo).slice(-12)}`,
+        traces: [],
+      };
+    }
+    if (!Array.isArray(order.logistics.traces)) order.logistics.traces = [];
+    if (!order.logistics.traces.some(trace => trace.status === 'shipped')) {
+      order.logistics.traces.unshift({
+        status: 'shipped',
+        description: '商品已由商家发出，等待快递揽收',
+        time,
+      });
+    }
+    return order.logistics;
+  };
   const orderSummary = order => ({
     ...order,
     quantity: itemCount(order),
     goodName: order.items[0]?.name || '',
     price: order.items[0]?.unitPrice || 0,
   });
+  app.locals.expireOrders = expireOrders;
+  expireOrders();
 
   app.post('/api/admin/login', (req, res) => {
     const { username, password } = req.body;
     const user = database.users.find(item => item.username === username && item.password === password);
     if (!user) return fail(res, 401, '用户名或密码错误');
+
+    // 根据用户的 role 字段查找对应的角色权限
+    const role = database.roles.find(r => {
+      if (user.role === 'admin1') return r.id === 1;
+      if (user.role === 'admin2') return r.id === 2;
+      if (user.role === 'admin3') return r.id === 3;
+      return false;
+    });
 
     return ok(res, {
       token: `mock-token-${Date.now()}`,
@@ -39,10 +98,40 @@ function createApp(store) {
         name: user.name,
         avatar: user.avatar,
         role: user.role,
+        roleName: role?.name || '',
+        permissions: role?.permissions || [],
         email: user.email,
         phone: user.phone,
       },
     }, '登录成功');
+  });
+
+  // 获取当前登录用户信息（刷新权限）
+  app.get('/api/admin/user/info', (req, res) => {
+    // 从 header 获取用户信息（简化版，实际项目应该从 token 中解析）
+    const userId = req.headers['x-user-id'] ? Number(req.headers['x-user-id']) : 1;
+    const user = database.users.find(u => u.id === userId);
+    if (!user) return fail(res, 404, '用户不存在');
+
+    // 根据用户的 role 字段查找对应的角色权限
+    const role = database.roles.find(r => {
+      if (user.role === 'admin1') return r.id === 1;
+      if (user.role === 'admin2') return r.id === 2;
+      if (user.role === 'admin3') return r.id === 3;
+      return false;
+    });
+
+    return ok(res, {
+      id: user.id,
+      username: user.username,
+      name: user.name,
+      avatar: user.avatar,
+      role: user.role,
+      roleName: role?.name || '',
+      permissions: role?.permissions || [],
+      email: user.email,
+      phone: user.phone,
+    }, '获取成功');
   });
 
   app.get('/api/products', (req, res) => {
@@ -167,6 +256,7 @@ function createApp(store) {
   });
 
   app.get('/api/users/:userId/orders', (req, res) => {
+    expireOrders();
     const { status } = req.query;
     const orders = database.orders
       .filter(order => Number(order.userId) === Number(req.params.userId))
@@ -215,6 +305,11 @@ function createApp(store) {
       payTime: '',
       shipTime: '',
       receiveTime: '',
+      expiresAt: new Date(Date.now() + PAYMENT_WINDOW_MS).toISOString(),
+      cancelTime: '',
+      cancelReason: '',
+      inventoryRestored: false,
+      logistics: null,
       createTime: now,
     };
 
@@ -236,14 +331,17 @@ function createApp(store) {
   });
 
   app.get('/api/orders/:id', (req, res) => {
+    expireOrders();
     const order = orderById(req.params.id);
     if (!order) return fail(res, 404, '订单不存在');
     return ok(res, order);
   });
 
   app.put('/api/orders/:id/pay', (req, res) => {
+    expireOrders();
     const order = orderById(req.params.id);
     if (!order) return fail(res, 404, '订单不存在');
+    if (order.status === 4) return fail(res, 409, order.cancelReason || '订单已取消');
     if (order.status !== 0) return fail(res, 409, '订单已支付或无法支付');
     order.status = 1;
     order.payMethod = req.body.payMethod || '微信支付';
@@ -253,8 +351,9 @@ function createApp(store) {
   });
 
   app.get('/api/admin/dashboard', (req, res) => {
+    expireOrders();
     const today = new Date().toISOString().slice(0, 10);
-    const paidOrders = database.orders.filter(order => order.status >= 1);
+    const paidOrders = database.orders.filter(order => order.status >= 1 && order.status <= 3);
     ok(res, {
       totalUsers: database.users.length,
       todayUsers: database.users.filter(user => String(user.createTime).startsWith(today)).length,
@@ -357,6 +456,7 @@ function createApp(store) {
   });
 
   app.get('/api/admin/orders', (req, res) => {
+    expireOrders();
     const { page = 1, pageSize = 10, status = '' } = req.query;
     let list = [...database.orders];
     if (status !== '') list = list.filter(order => order.status === Number(status));
@@ -371,19 +471,35 @@ function createApp(store) {
   });
 
   app.get('/api/admin/orders/:id', (req, res) => {
+    expireOrders();
     const order = orderById(req.params.id);
     if (!order) return fail(res, 404, '订单不存在');
     return ok(res, orderSummary(order));
   });
 
   app.put('/api/admin/orders/:id/status', (req, res) => {
+    expireOrders();
     const order = orderById(req.params.id);
     if (!order) return fail(res, 404, '订单不存在');
     const status = Number(req.body.status);
     order.status = status;
     if (status === 1 && !order.payTime) order.payTime = new Date().toISOString();
-    if (status === 2) order.shipTime = new Date().toISOString();
-    if (status === 3) order.receiveTime = new Date().toISOString();
+    const now = new Date().toISOString();
+    if (status === 2) {
+      order.shipTime = now;
+      ensureLogistics(order, now);
+    }
+    if (status === 3) {
+      order.receiveTime = now;
+      const logistics = ensureLogistics(order, order.shipTime || now);
+      if (!logistics.traces.some(trace => trace.status === 'received')) {
+        logistics.traces.unshift({
+          status: 'received',
+          description: '快件已签收，感谢使用顺丰速运',
+          time: now,
+        });
+      }
+    }
     saveDatabase();
     return ok(res, orderSummary(order), '更新成功');
   });
@@ -737,6 +853,7 @@ function createApp(store) {
 
   // 获取我的订单列表
   app.get('/api/user/orders', (req, res) => {
+    expireOrders();
     const userId = parseInt(req.headers['x-user-id']) || 1;
     const { status, page = 1, pageSize = 10 } = req.query;
 
@@ -765,6 +882,7 @@ function createApp(store) {
 
   // 获取订单详情
   app.get('/api/user/orders/:id', (req, res) => {
+    expireOrders();
     const id = parseInt(req.params.id);
     const order = orderById(id);
 
@@ -792,6 +910,10 @@ if (require.main === module) {
   const { database, nextId, saveDatabase, DB_PATH } = require('./data/store');
   const PORT = Number(process.env.PORT || 5000);
   const app = createApp({ database, nextId, saveDatabase });
+  const expirationTimer = setInterval(() => {
+    app.locals.expireOrders();
+  }, 30 * 1000);
+  expirationTimer.unref();
   
   app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);

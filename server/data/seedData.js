@@ -47,9 +47,9 @@ const products = productSeeds.map(([id, name, price, categoryId, img, tag, sales
 const users = [
   {
     id: 1,
-    username: 'admin',
+    username: 'admin1',
     password: '123456',
-    role: 'admin',
+    role: 'admin1',
     name: '系统管理员',
     nickname: '京东用户',
     avatar: '/assets/home/icons/recommend.svg',
@@ -60,9 +60,9 @@ const users = [
   },
   {
     id: 2,
-    username: 'manager',
+    username: 'admin2',
     password: '123456',
-    role: 'manager',
+    role: 'admin2',
     name: '商品管理员',
     avatar: '/assets/home/icons/recommend.svg',
     email: 'manager@example.com',
@@ -72,9 +72,9 @@ const users = [
   },
   {
     id: 3,
-    username: 'user',
+    username: 'admin3',
     password: '123456',
-    role: 'user',
+    role: 'admin3',
     name: '订单管理员',
     avatar: '/assets/home/icons/recommend.svg',
     email: 'user@example.com',
@@ -85,9 +85,9 @@ const users = [
 ];
 
 const roles = [
-  { id: 1, name: '超级管理员', description: '全部后台权限', permissions: ['dashboard', 'goods', 'categories', 'orders', 'users', 'roles'], createTime: now },
-  { id: 2, name: '商品管理员', description: '商品与分类管理', permissions: ['dashboard', 'goods', 'categories'], createTime: now },
-  { id: 3, name: '订单管理员', description: '订单与用户查看', permissions: ['dashboard', 'orders', 'users'], createTime: now },
+  { id: 1, name: 'admin1', description: '全部后台权限', permissions: ['dashboard', 'goods', 'categories', 'orders', 'users', 'roles'], createTime: now },
+  { id: 2, name: 'admin2', description: '商品与分类管理', permissions: ['dashboard', 'goods', 'categories'], createTime: now },
+  { id: 3, name: 'admin3', description: '订单与用户查看', permissions: ['dashboard', 'orders', 'users'], createTime: now },
 ];
 
 function createSeedData() {

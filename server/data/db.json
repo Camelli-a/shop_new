@@ -65,7 +65,7 @@
       "description": "精选商城好物，兼顾价格、品质和日常使用体验。",
       "status": 1,
       "createTime": "2026-06-08T12:51:12.506Z",
-      "updateTime": "2026-06-08T14:22:01.810Z"
+      "updateTime": "2026-06-14T02:07:04.696Z"
     },
     {
       "id": 2,
@@ -76,13 +76,13 @@
       "categoryName": "数码好物",
       "img": "/assets/home/jd-02.png",
       "tag": "补贴",
-      "sales": 182000,
+      "sales": 182001,
       "rating": 4.8,
-      "stock": 500,
+      "stock": 499,
       "description": "精选商城好物，兼顾价格、品质和日常使用体验。",
       "status": 1,
       "createTime": "2026-06-08T12:51:12.506Z",
-      "updateTime": "2026-06-08T12:51:12.506Z"
+      "updateTime": "2026-06-14T03:23:05.768Z"
     },
     {
       "id": 3,
@@ -275,7 +275,7 @@
   "users": [
     {
       "id": 1,
-      "username": "admin",
+      "username": "admin1",
       "password": "123456",
       "role": "admin",
       "name": "系统管理员",
@@ -288,7 +288,7 @@
     },
     {
       "id": 2,
-      "username": "manager",
+      "username": "admin2",
       "password": "123456",
       "role": "manager",
       "name": "商品管理员",
@@ -300,7 +300,7 @@
     },
     {
       "id": 3,
-      "username": "user",
+      "username": "admin3",
       "password": "123456",
       "role": "user",
       "name": "订单管理员",
@@ -333,7 +333,8 @@
       "permissions": [
         "dashboard",
         "goods",
-        "categories"
+        "categories",
+        "orders"
       ],
       "createTime": "2026-06-08T12:51:12.506Z"
     },
@@ -353,6 +354,166 @@
     "1": []
   },
   "orders": [
+    {
+      "id": 5,
+      "orderNo": "1781406466948005",
+      "userId": 1,
+      "userName": "京东用户",
+      "userPhone": "18201500146",
+      "items": [
+        {
+          "cartKey": "2-默认规格",
+          "goodId": 2,
+          "name": "华硕 ROG RTX5070 电竞主机整机",
+          "img": "/assets/home/jd-02.png",
+          "sku": "默认规格",
+          "quantity": 1,
+          "unitPrice": 5299,
+          "subtotal": 5299
+        }
+      ],
+      "totalAmount": 5299,
+      "receiver": "京东用户",
+      "receiverPhone": "18201500146",
+      "address": "a",
+      "status": 4,
+      "payMethod": "",
+      "payTime": "",
+      "shipTime": "",
+      "receiveTime": "",
+      "expiresAt": "2026-06-14T03:22:46.948Z",
+      "cancelTime": "2026-06-14T03:23:05.768Z",
+      "cancelReason": "支付超时，订单已自动取消",
+      "inventoryRestored": true,
+      "logistics": null,
+      "createTime": "2026-06-14T03:07:46.948Z"
+    },
+    {
+      "id": 4,
+      "orderNo": "1781401912952004",
+      "userId": 1,
+      "userName": "京东用户",
+      "userPhone": "18201500146",
+      "items": [
+        {
+          "cartKey": "1-默认规格",
+          "goodId": 1,
+          "name": "ASUS Ascent GX10 AI迷你高性能计算机",
+          "img": "/assets/home/jd-01.png",
+          "sku": "默认规格",
+          "quantity": 1,
+          "unitPrice": 665.1,
+          "subtotal": 665.1
+        },
+        {
+          "cartKey": "2-默认规格",
+          "goodId": 2,
+          "name": "华硕 ROG RTX5070 电竞主机整机",
+          "img": "/assets/home/jd-02.png",
+          "sku": "默认规格",
+          "quantity": 1,
+          "unitPrice": 5299,
+          "subtotal": 5299
+        }
+      ],
+      "totalAmount": 5964.1,
+      "receiver": "京东用户",
+      "receiverPhone": "18201500146",
+      "address": "a",
+      "status": 4,
+      "payMethod": "",
+      "payTime": "",
+      "shipTime": "",
+      "receiveTime": "",
+      "expiresAt": "2026-06-14T02:06:52.952Z",
+      "cancelTime": "2026-06-14T02:07:04.695Z",
+      "cancelReason": "支付超时，订单已自动取消",
+      "inventoryRestored": true,
+      "logistics": null,
+      "createTime": "2026-06-14T01:51:52.952Z"
+    },
+    {
+      "id": 3,
+      "orderNo": "1781365154888003",
+      "userId": 1,
+      "userName": "京东用户",
+      "userPhone": "18201500146",
+      "items": [
+        {
+          "cartKey": "1-默认规格",
+          "goodId": 1,
+          "name": "ASUS Ascent GX10 AI迷你高性能计算机",
+          "img": "/assets/home/jd-01.png",
+          "sku": "默认规格",
+          "quantity": 1,
+          "unitPrice": 665.1,
+          "subtotal": 665.1
+        },
+        {
+          "cartKey": "2-默认规格",
+          "goodId": 2,
+          "name": "华硕 ROG RTX5070 电竞主机整机",
+          "img": "/assets/home/jd-02.png",
+          "sku": "默认规格",
+          "quantity": 1,
+          "unitPrice": 5299,
+          "subtotal": 5299
+        }
+      ],
+      "totalAmount": 5964.1,
+      "receiver": "京东用户",
+      "receiverPhone": "18201500146",
+      "address": "北京市",
+      "status": 2,
+      "payMethod": "支付宝",
+      "payTime": "2026-06-13T15:39:20.735Z",
+      "shipTime": "2026-06-13T15:39:29.471Z",
+      "receiveTime": "",
+      "createTime": "2026-06-13T15:39:14.888Z"
+    },
+    {
+      "id": 2,
+      "orderNo": "1781365065463002",
+      "userId": 1,
+      "userName": "京东用户",
+      "userPhone": "18201500146",
+      "items": [
+        {
+          "cartKey": "1-默认规格",
+          "goodId": 1,
+          "name": "ASUS Ascent GX10 AI迷你高性能计算机",
+          "img": "/assets/home/jd-01.png",
+          "sku": "默认规格",
+          "quantity": 1,
+          "unitPrice": 665.1,
+          "subtotal": 665.1
+        },
+        {
+          "cartKey": "2-默认规格",
+          "goodId": 2,
+          "name": "华硕 ROG RTX5070 电竞主机整机",
+          "img": "/assets/home/jd-02.png",
+          "sku": "默认规格",
+          "quantity": 1,
+          "unitPrice": 5299,
+          "subtotal": 5299
+        }
+      ],
+      "totalAmount": 5964.1,
+      "receiver": "京东用户",
+      "receiverPhone": "18201500146",
+      "address": "北京市",
+      "status": 4,
+      "payMethod": "",
+      "payTime": "",
+      "shipTime": "",
+      "receiveTime": "",
+      "createTime": "2026-06-13T15:37:45.463Z",
+      "expiresAt": "2026-06-13T15:52:45.463Z",
+      "inventoryRestored": true,
+      "cancelTime": "2026-06-14T01:06:03.958Z",
+      "cancelReason": "支付超时，订单已自动取消"
+    },
     {
       "id": 1,
       "orderNo": "1780928521810001",
@@ -375,12 +536,16 @@
       "receiver": "京东用户",
       "receiverPhone": "18201500146",
       "address": "111",
-      "status": 0,
+      "status": 4,
       "payMethod": "",
       "payTime": "",
       "shipTime": "",
       "receiveTime": "",
-      "createTime": "2026-06-08T14:22:01.810Z"
+      "createTime": "2026-06-08T14:22:01.810Z",
+      "expiresAt": "2026-06-08T14:37:01.810Z",
+      "inventoryRestored": true,
+      "cancelTime": "2026-06-14T01:06:03.958Z",
+      "cancelReason": "支付超时，订单已自动取消"
     }
   ]
 }

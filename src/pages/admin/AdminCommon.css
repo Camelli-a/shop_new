@@ -170,6 +170,11 @@
   color: #52c41a;
 }
 
+.status-4 {
+  background: #f0f0f0;
+  color: #595959;
+}
+
 .status-active {
   background: #f6ffed;
   color: #52c41a;

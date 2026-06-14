@@ -64,7 +64,7 @@ function OrderManagement() {
     }
   };
 
-  const getStatusText = (status) => ['待付款', '待发货', '已发货', '已完成'][status];
+  const getStatusText = (status) => ['待付款', '待发货', '已发货', '已完成', '已取消'][status];
   const getStatusClass = (status) => `status-${status}`;
   const getNextStatusText = (status) => {
     const nextMap = { 0: '付款', 1: '发货', 2: '收货' };
@@ -85,6 +85,7 @@ function OrderManagement() {
             <option value="1">待发货</option>
             <option value="2">已发货</option>
             <option value="3">已完成</option>
+            <option value="4">已取消</option>
           </select>
           <button className="btn btn-primary" onClick={fetchOrders}>
             搜索
@@ -247,6 +248,26 @@ function OrderManagement() {
                   </div>
                 )}
               </div>
+
+              {showDetail.logistics && (
+                <div className="detail-section">
+                  <h4>物流信息</h4>
+                  <div className="detail-row">
+                    <span className="label">承运商：</span>
+                    <span>{showDetail.logistics.carrier}</span>
+                  </div>
+                  <div className="detail-row">
+                    <span className="label">运单号：</span>
+                    <span>{showDetail.logistics.trackingNo}</span>
+                  </div>
+                  {showDetail.logistics.traces?.map((trace) => (
+                    <div className="detail-row logistics-admin-trace" key={`${trace.status}-${trace.time}`}>
+                      <span className="label">{trace.time?.replace('T', ' ').slice(0, 19)}</span>
+                      <span>{trace.description}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
 
               <div className="detail-section status-actions">
                 {showDetail.status < 3 && showDetail.status > 0 && (
