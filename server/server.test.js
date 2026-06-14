@@ -197,6 +197,9 @@ describe('API Tests', () => {
       expect(response.status).toBe(200);
       expect(response.body.data.id).toBe(1);
       expect(response.body.data.status).toBe(0);
+      expect(new Date(response.body.data.expiresAt).getTime()).toBeGreaterThan(
+        new Date(response.body.data.createTime).getTime()
+      );
       expect(database.products[0].stock).toBe(initialStock - 2);
       expect(database.products[0].sales).toBeGreaterThan(0);
     });
@@ -235,6 +238,33 @@ describe('API Tests', () => {
       
       const response = await request(app).get('/api/users/1/orders');
       expect(response.body.data.length).toBeGreaterThan(0);
+    });
+
+    test('expired order should be cancelled and restore inventory only once', async () => {
+      const product = database.products[0];
+      const initialStock = product.stock;
+      const initialSales = product.sales;
+      const created = await request(app)
+        .post('/api/users/1/orders')
+        .send({ items: [{ goodId: product.id, quantity: 2 }], receiver: 'Test' });
+
+      database.orders.find(order => order.id === created.body.data.id).expiresAt =
+        new Date(Date.now() - 1000).toISOString();
+
+      const firstResponse = await request(app).get(`/api/orders/${created.body.data.id}`);
+      expect(firstResponse.body.data.status).toBe(4);
+      expect(firstResponse.body.data.inventoryRestored).toBe(true);
+      expect(product.stock).toBe(initialStock);
+      expect(product.sales).toBe(initialSales);
+
+      await request(app).get(`/api/orders/${created.body.data.id}`);
+      expect(product.stock).toBe(initialStock);
+      expect(product.sales).toBe(initialSales);
+
+      const payResponse = await request(app)
+        .put(`/api/orders/${created.body.data.id}/pay`)
+        .send({ payMethod: '微信支付' });
+      expect(payResponse.status).toBe(409);
     });
   });
 
@@ -350,6 +380,24 @@ describe('API Tests', () => {
       
       expect(response.body.data.status).toBe(2);
       expect(response.body.data.shipTime).toBeDefined();
+      expect(response.body.data.logistics.carrier).toBe('顺丰速运');
+      expect(response.body.data.logistics.trackingNo).toMatch(/^SF/);
+      expect(response.body.data.logistics.traces[0].status).toBe('shipped');
+    });
+
+    test('receiving order should append signed logistics trace', async () => {
+      await request(app)
+        .post('/api/users/1/orders')
+        .send({ items: [{ goodId: 1, quantity: 1 }], receiver: 'Test' });
+
+      await request(app).put('/api/admin/orders/1/status').send({ status: 2 });
+      const response = await request(app)
+        .put('/api/admin/orders/1/status')
+        .send({ status: 3 });
+
+      expect(response.body.data.receiveTime).toBeDefined();
+      expect(response.body.data.logistics.traces[0].status).toBe('received');
+      expect(response.body.data.logistics.traces).toHaveLength(2);
     });
   });
 

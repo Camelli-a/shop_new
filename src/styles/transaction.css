@@ -470,6 +470,37 @@
   font-size: 12px;
 }
 
+.payment-countdown {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  padding: 5px 10px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.18);
+  font-size: 12px;
+}
+
+.payment-countdown.is-expired {
+  background: rgba(70, 70, 70, 0.28);
+}
+
+.payment-qr-section {
+  display: grid;
+  justify-items: center;
+}
+
+.payment-qr-section .section-title {
+  width: 100%;
+}
+
+.payment-qr-section p {
+  margin: 8px 0 0;
+  color: var(--mall-muted);
+  font-size: 12px;
+  text-align: center;
+}
+
 .payment-hero > strong {
   margin: 8px 0;
   font-size: 38px;
@@ -689,6 +720,11 @@
   box-shadow: 0 15px 32px rgba(255, 43, 0, 0.2);
 }
 
+.order-status-hero.status-4 {
+  background: linear-gradient(135deg, #6b7280, #9ca3af);
+  box-shadow: 0 15px 32px rgba(75, 85, 99, 0.18);
+}
+
 .order-status-hero > svg {
   flex: 0 0 auto;
   font-size: 38px;
@@ -736,6 +772,105 @@
   color: #646a75;
   font-size: 12px;
   line-height: 1.55;
+}
+
+.logistics-card {
+  display: grid;
+  gap: 12px;
+}
+
+.logistics-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #f3faf7;
+}
+
+.logistics-meta strong {
+  color: #18745f;
+  font-size: 14px;
+}
+
+.logistics-meta span {
+  color: var(--mall-muted);
+  font-size: 11px;
+}
+
+.logistics-timeline {
+  display: grid;
+}
+
+.logistics-trace {
+  position: relative;
+  display: grid;
+  grid-template-columns: 16px 1fr;
+  gap: 10px;
+  min-height: 58px;
+}
+
+.logistics-trace::before {
+  position: absolute;
+  top: 14px;
+  bottom: -2px;
+  left: 5px;
+  width: 1px;
+  content: "";
+  background: #dce8e4;
+}
+
+.logistics-trace:last-child::before {
+  display: none;
+}
+
+.logistics-trace i {
+  z-index: 1;
+  width: 11px;
+  height: 11px;
+  margin-top: 3px;
+  border: 3px solid #cbd8d4;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.logistics-trace.is-current i {
+  border-color: #1f8f78;
+  box-shadow: 0 0 0 3px rgba(31, 143, 120, 0.12);
+}
+
+.logistics-trace > div,
+.logistics-pending > div {
+  display: grid;
+  gap: 5px;
+}
+
+.logistics-trace strong,
+.logistics-pending strong {
+  color: #3f4650;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.logistics-trace span,
+.logistics-pending span {
+  color: var(--mall-muted);
+  font-size: 11px;
+}
+
+.logistics-pending {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  background: #f6f7f8;
+}
+
+.logistics-pending > svg {
+  color: #1f8f78;
+  font-size: 22px;
 }
 
 .detail-info-list {

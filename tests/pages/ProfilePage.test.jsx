@@ -62,7 +62,7 @@ describe('ProfilePage - 已登录状态', () => {
   it('应显示我的订单区域', () => {
     renderPage();
 
-    expect(screen.getByText('我的订单')).toBeInTheDocument();
+    expect(screen.getAllByText('我的订单')).toHaveLength(2);
     expect(screen.getByText('全部')).toBeInTheDocument();
     expect(screen.getByText('待付款')).toBeInTheDocument();
     expect(screen.getByText('已付款')).toBeInTheDocument();

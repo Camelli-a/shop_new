@@ -36,7 +36,7 @@ function AdminHomePage() {
     }
   };
 
-  const getStatusText = (status) => ['待付款', '待发货', '已发货', '已完成'][status];
+  const getStatusText = (status) => ['待付款', '待发货', '已发货', '已完成', '已取消'][status];
   const getStatusClass = (status) => `status-${status}`;
 
   const statsCards = dashboardData ? [
@@ -115,7 +115,7 @@ function AdminHomePage() {
                   <td>{order.quantity}</td>
                   <td>
                     <span className={`status-badge status-${order.status}`}>
-                      {['待付款', '待发货', '已发货', '已完成'][order.status]}
+                      {getStatusText(order.status)}
                     </span>
                   </td>
                   <td>{order.payMethod}</td>
