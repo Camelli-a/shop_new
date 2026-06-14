@@ -34,7 +34,7 @@ function UserManagement() {
   const fetchUsers = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/api/admin/users');
+      const response = await fetch('/api/admin/users');
       const result = await response.json();
       if (result.code === 200) {
         setUsers(result.data);
@@ -48,7 +48,7 @@ function UserManagement() {
 
   const fetchRoles = useCallback(async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/admin/roles');
+      const response = await fetch('/api/admin/roles');
       const result = await response.json();
       if (result.code === 200 && Array.isArray(result.data)) {
         const roleOptions = result.data
@@ -123,7 +123,7 @@ function UserManagement() {
     }
 
     try {
-      const response = await fetch(`http://localhost:5000/api/admin/users/${user.id}`, {
+      const response = await fetch(`/api/admin/users/${user.id}`, {
         method: 'DELETE'
       });
       const result = await response.json();
@@ -153,7 +153,7 @@ function UserManagement() {
     try {
       let response;
       if (isAdding) {
-        response = await fetch('http://localhost:5000/api/admin/users', {
+        response = await fetch('/api/admin/users', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -161,7 +161,7 @@ function UserManagement() {
           body: JSON.stringify(formData)
         });
       } else {
-        response = await fetch(`http://localhost:5000/api/admin/users/${editingUser.id}`, {
+        response = await fetch(`/api/admin/users/${editingUser.id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json'

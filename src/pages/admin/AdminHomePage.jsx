@@ -8,7 +8,7 @@ function AdminHomePage() {
 
   const fetchDashboardData = useCallback(async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/admin/dashboard');
+      const response = await fetch('/api/admin/dashboard');
       const result = await response.json();
       if (result.code === 200) {
         setDashboardData(result.data);
@@ -26,7 +26,7 @@ function AdminHomePage() {
 
   const fetchOrderDetail = async (id) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/admin/orders/${id}`);
+      const response = await fetch(`/api/admin/orders/${id}`);
       const result = await response.json();
       if (result.code === 200) {
         setShowDetail(result.data);
