@@ -27,7 +27,7 @@ function RoleManagement() {
   const fetchRoles = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/api/admin/roles');
+      const response = await fetch('/api/admin/roles');
       const result = await response.json();
       if (result.code === 200) {
         setRoles(result.data);
@@ -76,7 +76,7 @@ function RoleManagement() {
     }
 
     try {
-      const response = await fetch(`http://localhost:5000/api/admin/roles/${role.id}`, {
+      const response = await fetch(`/api/admin/roles/${role.id}`, {
         method: 'DELETE'
       });
       const result = await response.json();
@@ -119,7 +119,7 @@ function RoleManagement() {
     try {
       let response;
       if (isAdding) {
-        response = await fetch('http://localhost:5000/api/admin/roles', {
+        response = await fetch('/api/admin/roles', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -127,7 +127,7 @@ function RoleManagement() {
           body: JSON.stringify(formData)
         });
       } else {
-        response = await fetch(`http://localhost:5000/api/admin/roles/${editingRole.id}`, {
+        response = await fetch(`/api/admin/roles/${editingRole.id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json'

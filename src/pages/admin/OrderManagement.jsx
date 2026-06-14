@@ -16,7 +16,7 @@ function OrderManagement() {
         pageSize: pagination.pageSize,
         ...(statusFilter !== '' && { status: statusFilter })
       });
-      const response = await fetch(`http://localhost:5000/api/admin/orders?${params}`);
+      const response = await fetch(`/api/admin/orders?${params}`);
       const result = await response.json();
       if (result.code === 200) {
         setOrders(result.data.list);
@@ -35,7 +35,7 @@ function OrderManagement() {
 
   const fetchOrderDetail = async (id) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/admin/orders/${id}`);
+      const response = await fetch(`/api/admin/orders/${id}`);
       const result = await response.json();
       if (result.code === 200) {
         setShowDetail(result.data);
@@ -47,7 +47,7 @@ function OrderManagement() {
 
   const handleUpdateStatus = async (orderId, newStatus) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/admin/orders/${orderId}/status`, {
+      const response = await fetch(`/api/admin/orders/${orderId}/status`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus })

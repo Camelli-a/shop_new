@@ -24,7 +24,7 @@ function ProductManagement() {
 
   const fetchCategories = useCallback(async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/admin/categories');
+      const response = await fetch('/api/admin/categories');
       const result = await response.json();
       if (result.code === 200) {
         setCategories(result.data);
@@ -42,7 +42,7 @@ function ProductManagement() {
         pageSize: pagination.pageSize,
         ...filters
       });
-      const response = await fetch(`http://localhost:5000/api/admin/products?${params}`);
+      const response = await fetch(`/api/admin/products?${params}`);
       const result = await response.json();
       if (result.code === 200) {
         setProducts(result.data.list);
@@ -66,8 +66,8 @@ function ProductManagement() {
     e.preventDefault();
     try {
       const url = editingProduct
-        ? `http://localhost:5000/api/admin/products/${editingProduct.id}`
-        : 'http://localhost:5000/api/admin/products';
+        ? `/api/admin/products/${editingProduct.id}`
+        : '/api/admin/products';
       const method = editingProduct ? 'PUT' : 'POST';
       
       const response = await fetch(url, {
@@ -104,7 +104,7 @@ function ProductManagement() {
 
   const handleDelete = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/admin/products/${deleteConfirm.id}`, {
+      const response = await fetch(`/api/admin/products/${deleteConfirm.id}`, {
         method: 'DELETE'
       });
       const result = await response.json();

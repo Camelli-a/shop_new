@@ -18,7 +18,7 @@ function CategoryManagement() {
   const fetchCategories = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/api/admin/categories');
+      const response = await fetch('/api/admin/categories');
       const result = await response.json();
       if (result.code === 200) {
         setCategories(result.data);
@@ -81,8 +81,8 @@ function CategoryManagement() {
     e.preventDefault();
     try {
       const url = editingCategory
-        ? `http://localhost:5000/api/admin/categories/${editingCategory.id}`
-        : 'http://localhost:5000/api/admin/categories';
+        ? `/api/admin/categories/${editingCategory.id}`
+        : '/api/admin/categories';
       const method = editingCategory ? 'PUT' : 'POST';
       
       const response = await fetch(url, {
@@ -110,7 +110,7 @@ function CategoryManagement() {
 
   const handleDelete = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/admin/categories/${deleteConfirm.id}`, {
+      const response = await fetch(`/api/admin/categories/${deleteConfirm.id}`, {
         method: 'DELETE'
       });
       const result = await response.json();
