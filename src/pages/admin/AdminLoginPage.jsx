@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuthAdmin } from '../../contexts/AuthAdminContext';
 import './AdminLoginPage.css';
 
 function AdminLoginPage() {
@@ -9,6 +10,7 @@ function AdminLoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { login } = useAuthAdmin();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -27,8 +29,7 @@ function AdminLoginPage() {
       const result = await response.json();
       
       if (result.code === 200) {
-        localStorage.setItem('adminToken', result.data.token);
-        localStorage.setItem('adminUser', JSON.stringify(result.data.user));
+        login(result.data.user, result.data.token);
         navigate('/admin/home');
       } else {
         setError(result.message || '登录失败');

@@ -8,6 +8,7 @@ import { RouterProvider } from 'react-router';
 import router from './router';
 import { ServiceProvider } from './contexts/ServiceContext';
 import { AuthProvider } from './contexts/AuthContext';
+import { AuthAdminProvider } from './contexts/AuthAdminContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -29,8 +30,10 @@ root.render(
       <AntdApp>
         <ServiceProvider>
           <AuthProvider>
-            <RouterProvider router={router}>
-            </RouterProvider>
+            <AuthAdminProvider>
+              <RouterProvider router={router}>
+              </RouterProvider>
+            </AuthAdminProvider>
           </AuthProvider>
         </ServiceProvider>
       </AntdApp>

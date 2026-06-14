@@ -82,6 +82,14 @@ function createApp(store) {
     const user = database.users.find(item => item.username === username && item.password === password);
     if (!user) return fail(res, 401, '用户名或密码错误');
 
+    // 根据用户的 role 字段查找对应的角色权限
+    const role = database.roles.find(r => {
+      if (user.role === 'admin1') return r.id === 1;
+      if (user.role === 'admin2') return r.id === 2;
+      if (user.role === 'admin3') return r.id === 3;
+      return false;
+    });
+
     return ok(res, {
       token: `mock-token-${Date.now()}`,
       user: {
@@ -90,10 +98,40 @@ function createApp(store) {
         name: user.name,
         avatar: user.avatar,
         role: user.role,
+        roleName: role?.name || '',
+        permissions: role?.permissions || [],
         email: user.email,
         phone: user.phone,
       },
     }, '登录成功');
+  });
+
+  // 获取当前登录用户信息（刷新权限）
+  app.get('/api/admin/user/info', (req, res) => {
+    // 从 header 获取用户信息（简化版，实际项目应该从 token 中解析）
+    const userId = req.headers['x-user-id'] ? Number(req.headers['x-user-id']) : 1;
+    const user = database.users.find(u => u.id === userId);
+    if (!user) return fail(res, 404, '用户不存在');
+
+    // 根据用户的 role 字段查找对应的角色权限
+    const role = database.roles.find(r => {
+      if (user.role === 'admin1') return r.id === 1;
+      if (user.role === 'admin2') return r.id === 2;
+      if (user.role === 'admin3') return r.id === 3;
+      return false;
+    });
+
+    return ok(res, {
+      id: user.id,
+      username: user.username,
+      name: user.name,
+      avatar: user.avatar,
+      role: user.role,
+      roleName: role?.name || '',
+      permissions: role?.permissions || [],
+      email: user.email,
+      phone: user.phone,
+    }, '获取成功');
   });
 
   app.get('/api/products', (req, res) => {

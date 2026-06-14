@@ -1,4 +1,5 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
+import { useAuthAdmin } from './contexts/AuthAdminContext';
 
 import App from './App';
 import LoginPage from './pages/LoginPage';
@@ -22,16 +23,28 @@ import CategoryManagement from './pages/admin/CategoryManagement';
 import OrderManagement from './pages/admin/OrderManagement';
 import UserManagement from './pages/admin/UserManagement';
 import RoleManagement from './pages/admin/RoleManagement';
+import ForbiddenPage from './pages/admin/ForbiddenPage';
 
 // Keep the small route guard next to the route table it protects.
 // eslint-disable-next-line react-refresh/only-export-components
 const AdminProtectedRoute = ({ children }) => {
-    const token = localStorage.getItem('adminToken');
-    if (!token) {
+    const { isLoggedIn } = useAuthAdmin();
+    if (!isLoggedIn) {
         return <Navigate to="/admin/login" replace />;
     }
     return children;
 };
+
+// 权限守卫组件
+// eslint-disable-next-line react-refresh/only-export-components
+const PermissionGuard = ({ permission, children }) => {
+    const { hasPermission } = useAuthAdmin();
+    if (!hasPermission(permission)) {
+        return <ForbiddenPage />;
+    }
+    return children;
+};
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -114,27 +127,27 @@ const router = createBrowserRouter([
       },
       {
         path: "home",
-        Component: AdminHomePage,
+        element: <PermissionGuard permission="dashboard"><AdminHomePage /></PermissionGuard>,
       },
       {
         path: "products",
-        Component: ProductManagement,
+        element: <PermissionGuard permission="goods"><ProductManagement /></PermissionGuard>,
       },
       {
         path: "categories",
-        Component: CategoryManagement,
+        element: <PermissionGuard permission="categories"><CategoryManagement /></PermissionGuard>,
       },
       {
         path: "orders",
-        Component: OrderManagement,
+        element: <PermissionGuard permission="orders"><OrderManagement /></PermissionGuard>,
       },
       {
         path: "users",
-        Component: UserManagement,
+        element: <PermissionGuard permission="users"><UserManagement /></PermissionGuard>,
       },
       {
         path: "roles",
-        Component: RoleManagement,
+        element: <PermissionGuard permission="roles"><RoleManagement /></PermissionGuard>,
       },
     ],
   },

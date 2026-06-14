@@ -1,12 +1,18 @@
-import { useState } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
+import { useAuthAdmin } from '../../contexts/AuthAdminContext';
 import './AdminLayout.css';
 
 function AdminLayout() {
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const adminUser = JSON.parse(localStorage.getItem('adminUser'));
+  const { adminUser, logout, hasMenuPermission, refreshPermissions } = useAuthAdmin();
+
+  // 页面加载时刷新权限
+  useEffect(() => {
+    void Promise.resolve().then(refreshPermissions);
+  }, [refreshPermissions]);
 
   const menuItems = [
     { path: '/admin/home', name: '首页', icon: '/assets/admin/icons/home.svg', key: 'home' },
@@ -17,9 +23,13 @@ function AdminLayout() {
     { path: '/admin/roles', name: '角色管理', icon: '/assets/admin/icons/roles.svg', key: 'roles' },
   ];
 
+  // 只显示有权限的菜单
+  const visibleMenuItems = useMemo(() => {
+    return menuItems.filter(item => hasMenuPermission(item.key));
+  }, [menuItems, hasMenuPermission]);
+
   const handleLogout = () => {
-    localStorage.removeItem('adminToken');
-    localStorage.removeItem('adminUser');
+    logout();
     navigate('/admin/login');
   };
 
@@ -32,7 +42,7 @@ function AdminLayout() {
           <h2 className="logo">{collapsed ? '🛒' : '🛒 商城管理'}</h2>
         </div>
         <nav className="sidebar-nav">
-          {menuItems.map((item) => (
+          {visibleMenuItems.map((item) => (
             <Link
               key={item.key}
               to={item.path}
@@ -57,7 +67,7 @@ function AdminLayout() {
         <header className="admin-header">
           <div className="header-left">
             <h1 className="page-title">
-              {menuItems.find((item) => isActive(item.path))?.name || '管理后台'}
+              {visibleMenuItems.find((item) => isActive(item.path))?.name || '管理后台'}
             </h1>
           </div>
           <div className="header-right">
@@ -67,7 +77,10 @@ function AdminLayout() {
                 alt="avatar"
                 className="user-avatar"
               />
-              <span className="user-name">{adminUser?.name || '管理员'}</span>
+              <div className="user-details">
+                <span className="user-name">{adminUser?.name || '管理员'}</span>
+                <span className="user-role">{adminUser?.roleName || ''}</span>
+              </div>
             </div>
             <button className="logout-btn" onClick={handleLogout}>
               退出登录

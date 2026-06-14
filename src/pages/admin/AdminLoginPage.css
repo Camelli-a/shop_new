@@ -26,8 +26,41 @@
 .login-subtitle {
   text-align: center;
   color: #888;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   font-size: 14px;
+}
+
+.test-accounts {
+  background: #f5f7fa;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.test-accounts-title {
+  font-size: 14px;
+  color: #666;
+  margin: 0 0 12px 0;
+  font-weight: 500;
+}
+
+.test-account {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 13px;
+}
+
+.test-account-role {
+  color: #666;
+}
+
+.test-account-cred {
+  color: #1677ff;
+  font-family: monospace;
+  background: white;
+  padding: 2px 8px;
+  border-radius: 4px;
 }
 
 .login-form {
