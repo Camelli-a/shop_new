@@ -2,10 +2,15 @@
 import React from 'react';
 import { useNavigate } from 'react-router';
 import {
+  EnvironmentOutlined,
   FileTextOutlined,
+  HistoryOutlined,
+  HeartOutlined,
   LogoutOutlined,
+  MessageOutlined,
   RightOutlined,
   ShoppingOutlined,
+  StarOutlined,
   UserOutlined,
   WalletOutlined,
 } from '@ant-design/icons';
@@ -134,6 +139,49 @@ const ProfilePage = () => {
               >
                 <ShoppingOutlined />
                 我的订单
+                <RightOutlined className="feature-arrow" />
+              </button>
+            </div>
+            {/* Feature without entries */}
+            <div className="profile-features">
+              <button
+                className="profile-feature-item"
+                type="button"
+              >
+                <EnvironmentOutlined />
+                地址管理
+                <RightOutlined className="feature-arrow" />
+              </button>
+              <button
+                className="profile-feature-item"
+                type="button"
+              >
+                <HistoryOutlined />
+                我的足迹
+                <RightOutlined className="feature-arrow" />
+              </button>
+              <button
+                className="profile-feature-item"
+                type="button"
+              >
+                <HeartOutlined />
+                我的关注
+                <RightOutlined className="feature-arrow" />
+              </button>
+              <button
+                className="profile-feature-item"
+                type="button"
+              >
+                <StarOutlined />
+                我的收藏
+                <RightOutlined className="feature-arrow" />
+              </button>
+              <button
+                className="profile-feature-item"
+                type="button"
+              >
+                <MessageOutlined />
+                我的评价
                 <RightOutlined className="feature-arrow" />
               </button>
             </div>

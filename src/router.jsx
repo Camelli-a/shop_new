@@ -1,5 +1,5 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
-import { useAuthAdmin } from './contexts/AuthAdminContext';
+import { useAuthAdmin } from './contexts/useAuthAdmin';
 
 import App from './App';
 import LoginPage from './pages/LoginPage';

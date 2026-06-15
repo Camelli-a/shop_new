@@ -1,6 +1,5 @@
-import { createContext, useContext, useState, useEffect } from 'react';
-
-const AuthAdminContext = createContext();
+import { useState } from 'react';
+import { AuthAdminContext } from './useAuthAdmin';
 
 export function AuthAdminProvider({ children }) {
   const [adminUser, setAdminUser] = useState(() => {
@@ -65,8 +64,4 @@ export function AuthAdminProvider({ children }) {
       {children}
     </AuthAdminContext.Provider>
   );
-}
-
-export function useAuthAdmin() {
-  return useContext(AuthAdminContext);
 }

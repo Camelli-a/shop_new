@@ -23,18 +23,18 @@ describe('API Tests', () => {
     test('POST /api/admin/login should succeed with correct credentials', async () => {
       const response = await request(app)
         .post('/api/admin/login')
-        .send({ username: 'admin', password: '123456' });
+        .send({ username: 'admin1', password: '123456' });
       
       expect(response.status).toBe(200);
       expect(response.body.code).toBe(200);
-      expect(response.body.data.user.username).toBe('admin');
+      expect(response.body.data.user.username).toBe('admin1');
       expect(response.body.data.token).toBeDefined();
     });
 
     test('POST /api/admin/login should fail with wrong password', async () => {
       const response = await request(app)
         .post('/api/admin/login')
-        .send({ username: 'admin', password: 'wrong' });
+        .send({ username: 'admin1', password: 'wrong' });
       
       expect(response.status).toBe(401);
     });

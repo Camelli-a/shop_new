@@ -918,6 +918,6 @@ if (require.main === module) {
   app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
     console.log(`Database: ${DB_PATH}`);
-    console.log('Test accounts: admin / manager / user, password: 123456');
+    console.log('Test accounts: admin1 / admin2 / admin3, password: 123456');
   });
 }
