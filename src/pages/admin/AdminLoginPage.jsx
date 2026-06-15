@@ -3,6 +3,30 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthAdmin } from '../../contexts/useAuthAdmin';
 import './AdminLoginPage.css';
 
+const ADMIN_STORAGE_KEYS = {
+  roles: 'adminRoles',
+  accounts: 'adminAccounts',
+};
+
+function safeParseJson(raw, fallback) {
+  if (!raw) return fallback;
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return fallback;
+  }
+}
+
+function loadAdminRoles() {
+  const roles = safeParseJson(localStorage.getItem(ADMIN_STORAGE_KEYS.roles), []);
+  return Array.isArray(roles) ? roles : [];
+}
+
+function loadAdminAccounts() {
+  const accounts = safeParseJson(localStorage.getItem(ADMIN_STORAGE_KEYS.accounts), []);
+  return Array.isArray(accounts) ? accounts : [];
+}
+
 function AdminLoginPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -18,24 +42,33 @@ function AdminLoginPage() {
     setError('');
 
     try {
-      const response = await fetch('/api/admin/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
-      });
-      
-      const result = await response.json();
-      
-      if (result.code === 200) {
-        login(result.data.user, result.data.token);
-        navigate('/admin/home');
-      } else {
-        setError(result.message || '登录失败');
+      const accounts = loadAdminAccounts();
+      const roles = loadAdminRoles();
+
+      const matched = accounts.find(
+        (u) => u?.username === username && u?.password === password
+      );
+
+      if (!matched) {
+        setError('用户名或密码错误');
+        return;
       }
-    } catch {
-      setError('网络错误，请确保后端服务已启动');
+
+      const role = roles.find((r) => r?.id === matched.roleId);
+      const token = `mock-admin-token-${Date.now()}`;
+
+      const userData = {
+        id: matched.id,
+        username: matched.username,
+        name: matched.name || matched.username,
+        avatar: matched.avatar,
+        roleId: matched.roleId,
+        roleName: role?.name || '',
+        permissions: Array.isArray(role?.permissions) ? role.permissions : [],
+      };
+
+      login(userData, token);
+      navigate('/admin/home');
     } finally {
       setLoading(false);
     }

@@ -1,6 +1,29 @@
 import { useCallback, useEffect, useState } from 'react';
 import './RoleManagement.css';
 
+const ADMIN_STORAGE_KEYS = {
+  roles: 'adminRoles',
+};
+
+function safeParseJson(raw, fallback) {
+  if (!raw) return fallback;
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return fallback;
+  }
+}
+
+function loadAdminRoles() {
+  const roles = safeParseJson(localStorage.getItem(ADMIN_STORAGE_KEYS.roles), []);
+  return Array.isArray(roles) ? roles : [];
+}
+
+function saveAdminRoles(roles) {
+  localStorage.setItem(ADMIN_STORAGE_KEYS.roles, JSON.stringify(roles));
+  window.dispatchEvent(new Event('adminRolesUpdated'));
+}
+
 function RoleManagement() {
   const [roles, setRoles] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -27,11 +50,7 @@ function RoleManagement() {
   const fetchRoles = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await fetch('/api/admin/roles');
-      const result = await response.json();
-      if (result.code === 200) {
-        setRoles(result.data);
-      }
+      setRoles(loadAdminRoles());
     } catch (err) {
       console.error('获取角色失败', err);
     } finally {
@@ -76,16 +95,10 @@ function RoleManagement() {
     }
 
     try {
-      const response = await fetch(`/api/admin/roles/${role.id}`, {
-        method: 'DELETE'
-      });
-      const result = await response.json();
-      if (result.code === 200) {
-        alert('删除成功');
-        fetchRoles();
-      } else {
-        alert(result.message || '删除失败');
-      }
+      const nextRoles = loadAdminRoles().filter((r) => r?.id !== role.id);
+      saveAdminRoles(nextRoles);
+      setRoles(nextRoles);
+      alert('删除成功');
     } catch (err) {
       console.error('删除角色失败', err);
       alert('删除失败');
@@ -117,33 +130,36 @@ function RoleManagement() {
     }
 
     try {
-      let response;
       if (isAdding) {
-        response = await fetch('/api/admin/roles', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(formData)
-        });
+        const currentRoles = loadAdminRoles();
+        const maxId = currentRoles.reduce((max, r) => Math.max(max, Number(r?.id) || 0), 0);
+        const newRole = {
+          id: maxId + 1,
+          name: formData.name,
+          description: formData.description,
+          permissions: Array.isArray(formData.permissions) ? formData.permissions : [],
+          createTime: new Date().toISOString(),
+        };
+        const nextRoles = [...currentRoles, newRole];
+        saveAdminRoles(nextRoles);
+        setRoles(nextRoles);
+        alert('创建成功');
       } else {
-        response = await fetch(`/api/admin/roles/${editingRole.id}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(formData)
+        const currentRoles = loadAdminRoles();
+        const nextRoles = currentRoles.map((r) => {
+          if (r?.id !== editingRole.id) return r;
+          return {
+            ...r,
+            name: formData.name,
+            description: formData.description,
+            permissions: Array.isArray(formData.permissions) ? formData.permissions : [],
+          };
         });
+        saveAdminRoles(nextRoles);
+        setRoles(nextRoles);
+        alert('更新成功');
       }
-      
-      const result = await response.json();
-      if (result.code === 200) {
-        alert(isAdding ? '创建成功' : '更新成功');
-        setShowModal(false);
-        fetchRoles();
-      } else {
-        alert(result.message || '操作失败');
-      }
+      setShowModal(false);
     } catch (err) {
       console.error('操作角色失败', err);
       alert('操作失败');
